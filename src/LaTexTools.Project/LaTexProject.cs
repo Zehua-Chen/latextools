@@ -1,11 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.IO;
 
-namespace LaTexTools.Project
+namespace LaTeXTools.Project
 {
-    public class LaTexProject
+    public class LaTeXProject
     {
         [JsonPropertyName("latex")]
         public string LaTex { get; set; } = "pdflatex";
@@ -19,10 +20,11 @@ namespace LaTexTools.Project
         [JsonPropertyName("includes")]
         public string[] Includes { get; set; } = new string[] {};
 
-        public static ValueTask<LaTexProject> LoadAsync(string filename)
+        public static async ValueTask<LaTeXProject> LoadAsync(string filename)
         {
-            using var stream = new FileStream(filename, FileMode.Open);
-            return JsonSerializer.DeserializeAsync<LaTexProject>(stream);
+            using var stream = File.Open(filename, FileMode.Open);
+
+            return await JsonSerializer.DeserializeAsync<LaTeXProject>(stream);
         }
     }
 }

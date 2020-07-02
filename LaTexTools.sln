@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "latextools", "src\latextool
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LaTeXTools.Build", "src\LaTeXTools.Build\LaTeXTools.Build.csproj", "{528D2438-20EE-4898-8BE4-3DE41A0CD7F2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LaTexTools.Project", "src\LaTexTools.Project\LaTexTools.Project.csproj", "{B13AD705-7C14-4CA7-A71F-24770EB1FC89}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LaTeXTools.Project", "src\LaTeXTools.Project\LaTeXTools.Project.csproj", "{B13AD705-7C14-4CA7-A71F-24770EB1FC89}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
