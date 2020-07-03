@@ -28,20 +28,16 @@ namespace LaTeXTools.Build
                 return 0;
             }
 
-            LaTeXBackend backend = this.Root.GetBackend();
+            string oldAUX = await File.ReadAllTextAsync(this.Root.GetAUXPath());
 
-            await _taskFactory.StartNew(() =>
+            await this.Build();
+
+            string newAUX = await File.ReadAllTextAsync(this.Root.GetAUXPath());
+
+            if (oldAUX != newAUX)
             {
-                var process = Process.Start(new ProcessStartInfo()
-                {
-                    FileName = this.Root.LaTex,
-                    Arguments = backend.Arguments
-                });
-
-                Console.WriteLine(process.StartInfo.Arguments);
-
-                process.WaitForExit();
-            });
+                await this.Build();
+            }
 
             return 0;
         }
@@ -54,13 +50,13 @@ namespace LaTeXTools.Build
                 return true;
             }
 
-            if (!File.Exists(this.Root.GetPDF()))
+            if (!File.Exists(this.Root.GetPDFPath()))
             {
                 return true;
             }
 
-            Queue<string> dependencies = new Queue<string>(this.Root.GetDependencies());
-            DateTime pdfWriteTime = (new FileInfo(this.Root.GetPDF())).LastWriteTimeUtc;
+            Queue<string> dependencies = new Queue<string>(this.Root.GetDependencyPaths());
+            DateTime pdfWriteTime = (new FileInfo(this.Root.GetPDFPath())).LastWriteTimeUtc;
 
             while (dependencies.Count != 0)
             {
@@ -85,6 +81,15 @@ namespace LaTeXTools.Build
             }
 
             return false;
+        }
+
+        private ValueTask Build()
+        {
+            return new ValueTask(_taskFactory.StartNew(() =>
+            {
+                var process = Process.Start(this.Root.GetStartInfo());
+                process.WaitForExit();
+            }));
         }
     }
 }
