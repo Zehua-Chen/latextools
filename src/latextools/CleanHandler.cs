@@ -6,7 +6,7 @@ using LaTeXTools.Project;
 
 namespace latextools
 {
-    public class CleanHandler: ICommandHandler
+    public class CleanHandler : ICommandHandler
     {
         public async Task<int> InvokeAsync(InvocationContext context)
         {

@@ -11,13 +11,11 @@ namespace latextools
     {
         public async Task<int> InvokeAsync(InvocationContext context)
         {
-            string config = Path.Combine(Environment.CurrentDirectory, "latexproject.json");
-            LaTeXProject project = new LaTeXProject();
+            LaTeXProject project = await LaTeXProject.FindAsync(
+                "latexproject.json",
+                new LaTeXProject());
 
-            if (File.Exists(config))
-            {
-                project = await LaTeXProject.LoadAsync(config);
-            }
+            Console.WriteLine(project.Entry);
 
             LaTexBuild build = new LaTexBuild(project, TaskScheduler.Current);
 
