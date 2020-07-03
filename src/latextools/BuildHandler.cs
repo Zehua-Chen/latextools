@@ -15,7 +15,10 @@ namespace latextools
                 "latexproject.json",
                 new LaTeXProject());
 
-            Console.WriteLine(project.Entry);
+            if (Environment.CurrentDirectory != project.WorkingDirectory)
+            {
+                Environment.CurrentDirectory = project.WorkingDirectory;
+            }
 
             LaTexBuild build = new LaTexBuild(project, TaskScheduler.Current);
 
