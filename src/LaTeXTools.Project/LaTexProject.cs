@@ -29,11 +29,11 @@ namespace LaTeXTools.Project
             LaTeXProject @default)
         {
             string current = Environment.CurrentDirectory;
-            string root = Path.GetPathRoot(current);
+            string root = Path.GetPathRoot(current)!;
 
             while (!File.Exists(Path.Combine(current, filename)) || current == root)
             {
-                current = Path.GetDirectoryName(current);
+                current = Path.GetDirectoryName(current)!;
             }
 
             string path = Path.Combine(current, filename);
@@ -54,7 +54,7 @@ namespace LaTeXTools.Project
             }
 
             using var stream = File.Open(path, FileMode.Open);
-            string directory = Path.GetDirectoryName(path);
+            string directory = Path.GetDirectoryName(path)!;
 
             var project = await JsonSerializer.DeserializeAsync<LaTeXProject>(stream);
 

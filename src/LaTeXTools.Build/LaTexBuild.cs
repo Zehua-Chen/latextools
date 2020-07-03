@@ -9,7 +9,7 @@ namespace LaTeXTools.Build
 {
     public class LaTexBuild
     {
-        TaskFactory _taskFactory = null;
+        TaskFactory _taskFactory;
 
         public LaTeXProject Root { get; private set; }
         public TaskScheduler Scheduler { get; private set; }
