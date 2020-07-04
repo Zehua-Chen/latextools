@@ -1,20 +1,19 @@
 using System;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace LaTeXTools.Build.Tasks
 {
     public class ConditionalGroupTask : GroupTask
     {
-        public Func<bool> Condition { get; set; } = () => true;
+        public Func<ValueTask<bool>> Condition { get; set; } = () => new ValueTask<bool>(false);
 
-        public override async ValueTask RunAsync(TaskFactory taskFactory)
+        public override async ValueTask RunAsync()
         {
-            if (!this.Condition())
+            if (await this.Condition())
             {
-                return;
+                await base.RunAsync();
             }
-
-            await base.RunAsync(taskFactory);
         }
     }
 }

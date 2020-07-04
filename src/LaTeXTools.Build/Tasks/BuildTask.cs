@@ -6,7 +6,7 @@ namespace LaTeXTools.Build.Tasks
     {
         public string? Name { get; set; }
 
-        public virtual ValueTask RunAsync(TaskFactory taskFactory)
+        public virtual ValueTask RunAsync()
         {
             return new ValueTask();
         }

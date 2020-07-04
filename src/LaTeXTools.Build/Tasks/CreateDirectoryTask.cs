@@ -12,7 +12,7 @@ namespace LaTeXTools.Build.Tasks
             this.Directory = directory;
         }
 
-        public override ValueTask RunAsync(TaskFactory taskFactory)
+        public override ValueTask RunAsync()
         {
             if (!System.IO.Directory.Exists(this.Directory))
             {

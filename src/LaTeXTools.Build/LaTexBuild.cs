@@ -26,55 +26,40 @@ namespace LaTeXTools.Build
         {
             string oldAUX = await File.ReadAllTextAsync(this.Root.GetAUXPath());
 
-            var mainTask = new ConditionalGroupTask()
+            var mainTask = new RunIfFileOutdatedGroupTask()
             {
-                Condition = () =>
-                {
-                    if (!File.Exists(this.Root.GetPDFPath()))
-                    {
-                        return true;
-                    }
-
-                    var pdfWriteTime = (new FileInfo(this.Root.GetPDFPath())).LastWriteTimeUtc;
-
-                    foreach (var file in this.GetIncludes())
-                    {
-                        if (File.Exists(file))
-                        {
-                            var info = new FileInfo(file);
-
-                            if (info.LastWriteTimeUtc > pdfWriteTime)
-                            {
-                                return true;
-                            }
-                        }
-                    }
-
-                    return false;
-                },
+                FilePath = this.Root.GetPDFPath(),
+                DependencyPaths = this.GetIncludes(),
                 Children = new List<BuildTask>()
                 {
-                    new RunTask(this.Root.GetLaTeXStartInfo()),
+                    new RunProcessTask(this.Root.GetLaTeXStartInfo()),
                 }
             };
 
             if (this.Root.Bib != "none")
             {
-                mainTask.Children.Add(new RunTask(this.Root.GetBibStartInfo()));
+                mainTask.Children.Add(new RunProcessTask(this.Root.GetBibStartInfo()));
             }
-
-            mainTask.Children.Add(
-                new RunIfFileNotMatchedTask(
-                    this.Root.GetLaTeXStartInfo(),
-                    this.Root.GetAUXPath(),
-                    oldAUX));
 
             var groupTask = new GroupTask()
             {
                 Children = new List<BuildTask>()
                 {
                     new CreateDirectoryTask(this.Root.Bin),
-                    mainTask
+                    mainTask,
+                    new ConditionalGroupTask()
+                    {
+                        Condition = async () =>
+                        {
+                            string newAux = await File.ReadAllTextAsync(this.Root.GetAUXPath());
+
+                            return newAux != oldAUX;
+                        },
+                        Children = new List<BuildTask>()
+                        {
+                            new RunProcessTask(this.Root.GetLaTeXStartInfo())
+                        }
+                    }
                 }
             };
 

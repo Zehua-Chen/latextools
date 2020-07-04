@@ -23,10 +23,15 @@ namespace latextools
             var build = new LaTexBuild(project, TaskScheduler.Current);
             BuildTask task = await build.GetBuildTaskAsync();
 
-            var scheduler = TaskScheduler.Current;
-            var factory = new TaskFactory(scheduler);
-
-            await task.RunAsync(factory);
+            try
+            {
+                await task.RunAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return -1;
+            }
 
             return 0;
         }

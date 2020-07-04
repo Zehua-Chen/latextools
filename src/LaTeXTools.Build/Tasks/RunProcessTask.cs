@@ -3,18 +3,18 @@ using System.Diagnostics;
 
 namespace LaTeXTools.Build.Tasks
 {
-    public class RunTask : BuildTask
+    public class RunProcessTask : BuildTask
     {
         public ProcessStartInfo StartInfo { get; set; }
 
-        public RunTask(ProcessStartInfo startInfo)
+        public RunProcessTask(ProcessStartInfo startInfo)
         {
             this.StartInfo = startInfo;
         }
 
-        public override async ValueTask RunAsync(TaskFactory taskFactory)
+        public override async ValueTask RunAsync()
         {
-            await taskFactory.StartNew(() =>
+            await Task.Run(() =>
             {
                 Process.Start(this.StartInfo).WaitForExit();
             });
