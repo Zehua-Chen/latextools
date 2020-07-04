@@ -32,6 +32,11 @@ namespace LaTeXTools.Build
 
             await this.Build();
 
+            if (this.Root.Bib != "none")
+            {
+                await this.Bib();
+            }
+
             string newAUX = await File.ReadAllTextAsync(this.Root.GetAUXPath());
 
             if (oldAUX != newAUX)
@@ -83,13 +88,22 @@ namespace LaTeXTools.Build
             return false;
         }
 
-        private ValueTask Build()
+        private async ValueTask Build()
         {
-            return new ValueTask(_taskFactory.StartNew(() =>
+            await _taskFactory.StartNew(() =>
             {
-                var process = Process.Start(this.Root.GetStartInfo());
+                var process = Process.Start(this.Root.GetLaTeXStartInfo());
                 process.WaitForExit();
-            }));
+            });
+        }
+
+        private async ValueTask Bib()
+        {
+            await _taskFactory.StartNew(() =>
+            {
+                var process = Process.Start(this.Root.GetBibStartInfo());
+                process.WaitForExit();
+            });
         }
     }
 }

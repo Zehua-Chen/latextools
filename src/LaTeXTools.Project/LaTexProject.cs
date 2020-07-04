@@ -18,6 +18,9 @@ namespace LaTeXTools.Project
         [JsonPropertyName("entry")]
         public string Entry { get; set; } = "index.tex";
 
+        [JsonPropertyName("bib")]
+        public string Bib { get; set; } = "none";
+
         [JsonPropertyName("includes")]
         public string[] Includes { get; set; } = new string[] { };
 
@@ -64,6 +67,15 @@ namespace LaTeXTools.Project
             project.Includes = project.Includes
                 .Select((current) => { return Path.GetFullPath(current, directory); })
                 .ToArray();
+
+            switch (project.Bib)
+            {
+                case "none":
+                case "biber":
+                    break;
+                default:
+                    throw new ArgumentException("\"bib\" can only be none or biber");
+            }
 
             return project;
         }

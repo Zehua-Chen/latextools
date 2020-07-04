@@ -1,3 +1,4 @@
 sections/
-index.tex
+*.tex
+*.bib
 latexproject.json
