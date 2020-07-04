@@ -1,9 +1,9 @@
 using System;
-using System.IO;
 using System.Threading.Tasks;
 using System.CommandLine.Invocation;
 using LaTeXTools.Project;
 using LaTeXTools.Build;
+using LaTeXTools.Build.Tasks;
 
 namespace latextools
 {
@@ -20,9 +20,15 @@ namespace latextools
                 Environment.CurrentDirectory = project.WorkingDirectory;
             }
 
-            LaTexBuild build = new LaTexBuild(project, TaskScheduler.Current);
+            var build = new LaTexBuild(project, TaskScheduler.Current);
+            BuildTask task = await build.GetBuildTaskAsync();
 
-            return await build.BuildAsync();
+            var scheduler = TaskScheduler.Current;
+            var factory = new TaskFactory(scheduler);
+
+            await task.RunAsync(factory);
+
+            return 0;
         }
     }
 }

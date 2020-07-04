@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Diagnostics;
 using LaTeXTools.Project;
+using LaTeXTools.Build.Tasks;
 
 namespace LaTeXTools.Build
 {
@@ -21,89 +22,91 @@ namespace LaTeXTools.Build
             _taskFactory = new TaskFactory(scheduler);
         }
 
-        public async ValueTask<int> BuildAsync()
+        public async ValueTask<BuildTask> GetBuildTaskAsync()
         {
-            if (!this.ShouldBuild())
-            {
-                return 0;
-            }
-
             string oldAUX = await File.ReadAllTextAsync(this.Root.GetAUXPath());
 
-            await this.Build();
+            var mainTask = new ConditionalGroupTask()
+            {
+                Condition = () =>
+                {
+                    if (!File.Exists(this.Root.GetPDFPath()))
+                    {
+                        return true;
+                    }
+
+                    var pdfWriteTime = (new FileInfo(this.Root.GetPDFPath())).LastWriteTimeUtc;
+
+                    foreach (var file in this.GetIncludes())
+                    {
+                        if (File.Exists(file))
+                        {
+                            var info = new FileInfo(file);
+
+                            if (info.LastWriteTimeUtc > pdfWriteTime)
+                            {
+                                return true;
+                            }
+                        }
+                    }
+
+                    return false;
+                },
+                Children = new List<BuildTask>()
+                {
+                    new RunTask(this.Root.GetLaTeXStartInfo()),
+                }
+            };
 
             if (this.Root.Bib != "none")
             {
-                await this.Bib();
+                mainTask.Children.Add(new RunTask(this.Root.GetBibStartInfo()));
             }
 
-            string newAUX = await File.ReadAllTextAsync(this.Root.GetAUXPath());
+            mainTask.Children.Add(
+                new RunIfFileNotMatchedTask(
+                    this.Root.GetLaTeXStartInfo(),
+                    this.Root.GetAUXPath(),
+                    oldAUX));
 
-            if (oldAUX != newAUX)
+            var groupTask = new GroupTask()
             {
-                await this.Build();
-            }
+                Children = new List<BuildTask>()
+                {
+                    new CreateDirectoryTask(this.Root.Bin),
+                    mainTask
+                }
+            };
 
-            return 0;
+            return groupTask;
         }
 
-        private bool ShouldBuild()
+        private IEnumerable<string> GetIncludes()
         {
-            if (!Directory.Exists(this.Root.Bin))
+            var toVisit = new Queue<string>();
+
+
+            foreach (var include in this.Root.GetDependencyPaths())
             {
-                Directory.CreateDirectory(this.Root.Bin);
-                return true;
+                toVisit.Enqueue(include);
             }
 
-            if (!File.Exists(this.Root.GetPDFPath()))
+            while (toVisit.Count != 0)
             {
-                return true;
-            }
+                string item = toVisit.Dequeue();
 
-            Queue<string> dependencies = new Queue<string>(this.Root.GetDependencyPaths());
-            DateTime pdfWriteTime = (new FileInfo(this.Root.GetPDFPath())).LastWriteTimeUtc;
-
-            while (dependencies.Count != 0)
-            {
-                var dependency = dependencies.Dequeue();
-
-                if (Directory.Exists(dependency))
+                if (Directory.Exists(item))
                 {
-                    foreach (var item in Directory.EnumerateFileSystemEntries(dependency))
+                    foreach (var child in Directory.EnumerateFileSystemEntries(item))
                     {
-                        dependencies.Enqueue(item);
+                        toVisit.Enqueue(child);
                     }
 
                     continue;
                 }
 
-                var info = new FileInfo(dependency);
-
-                if (info.LastWriteTimeUtc > pdfWriteTime)
-                {
-                    return true;
-                }
+                yield return item;
             }
-
-            return false;
-        }
-
-        private async ValueTask Build()
-        {
-            await _taskFactory.StartNew(() =>
-            {
-                var process = Process.Start(this.Root.GetLaTeXStartInfo());
-                process.WaitForExit();
-            });
-        }
-
-        private async ValueTask Bib()
-        {
-            await _taskFactory.StartNew(() =>
-            {
-                var process = Process.Start(this.Root.GetBibStartInfo());
-                process.WaitForExit();
-            });
         }
     }
 }
