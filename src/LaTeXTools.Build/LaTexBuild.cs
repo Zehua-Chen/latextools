@@ -18,6 +18,8 @@ namespace LaTeXTools.Build
 
         public async ValueTask<BuildTask> GetBuildTaskAsync()
         {
+            this.Root.Validate();
+
             string oldAUX = await File.ReadAllTextAsync(this.Root.GetAUXPath());
 
             var mainTask = new RunIfFileOutdatedGroupTask()
