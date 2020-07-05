@@ -21,9 +21,9 @@ namespace latextools
             }
 
             var build = new LaTexBuild(project);
-            BuildTask task = await build.GetBuildTaskAsync();
+            var logger = new Logger();
 
-            Logger logger = new Logger();
+            ProjectTask task = await build.GetBuildTaskAsync();
 
             try
             {

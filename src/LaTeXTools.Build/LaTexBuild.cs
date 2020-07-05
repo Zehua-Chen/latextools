@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.IO;
 using LaTeXTools.Project;
 using LaTeXTools.Build.Tasks;
-using LaTeXTools.Build.Log;
 
 namespace LaTeXTools.Build
 {
@@ -16,56 +16,53 @@ namespace LaTeXTools.Build
             this.Root = root;
         }
 
-        public async ValueTask<BuildTask> GetBuildTaskAsync()
+        public async ValueTask<ProjectTask> GetBuildTaskAsync()
         {
             this.Root.Validate();
 
             string oldAUX = await File.ReadAllTextAsync(this.Root.GetAUXPath());
-
-            var mainTask = new RunIfFileOutdatedGroupTask()
+            var buildTasks = new List<BuildTask>()
             {
-                FilePath = this.Root.GetPDFPath(),
-                DependencyPaths = this.GetIncludes(),
-                Children = new List<BuildTask>()
+                new RunProcessTask()
                 {
-                    new RunProcessTask(this.Root.GetLaTeXStartInfo()),
+                    StartInfo = this.Root.GetLaTeXStartInfo()
                 }
             };
 
             if (this.Root.Bib != "none")
             {
-                mainTask.Children.Add(new RunProcessTask(this.Root.GetBibStartInfo()));
+                buildTasks.Add(new RunProcessTask()
+                {
+                    StartInfo = this.Root.GetBibStartInfo()
+                });
             }
 
-            var groupTask = new GroupTask()
+            buildTasks.Add(new ConditionalRunProcessTask()
             {
-                Children = new List<BuildTask>()
+                Condition = async () =>
                 {
-                    new CreateDirectoryTask(this.Root.Bin),
-                    mainTask,
-                    new ConditionalGroupTask()
-                    {
-                        Condition = async () =>
-                        {
-                            string newAux = await File.ReadAllTextAsync(this.Root.GetAUXPath());
+                    string newAUX = await File.ReadAllTextAsync(this.Root.GetAUXPath());
 
-                            return newAux != oldAUX;
-                        },
-                        Children = new List<BuildTask>()
-                        {
-                            new RunProcessTask(this.Root.GetLaTeXStartInfo())
-                        }
-                    }
-                }
+                    Console.WriteLine($"{oldAUX.Length}, {newAUX.Length}");
+                    return newAUX != oldAUX;
+                },
+                StartInfo = this.Root.GetLaTeXStartInfo()
+            });
+
+            var task = new ProjectTask()
+            {
+                OutputFilePath = this.Root.GetPDFPath(),
+                OutputDirectory = this.Root.Bin,
+                DependencyPaths = this.GetIncludes(),
+                BuildTasks = buildTasks
             };
 
-            return groupTask;
+            return task;
         }
 
         private IEnumerable<string> GetIncludes()
         {
             var toVisit = new Queue<string>();
-
 
             foreach (var include in this.Root.GetDependencyPaths())
             {

@@ -4,9 +4,9 @@ using LaTeXTools.Build.Log;
 
 namespace LaTeXTools.Build.Tasks
 {
-    public class ConditionalGroupTask : GroupTask
+    public class ConditionalRunProcessTask : RunProcessTask
     {
-        public Func<ValueTask<bool>> Condition { get; set; } = () => new ValueTask<bool>(false);
+        public Func<ValueTask<bool>> Condition { get; set; } = () => new ValueTask<bool>(true);
 
         public override async ValueTask RunAsync(ILogger? logger)
         {

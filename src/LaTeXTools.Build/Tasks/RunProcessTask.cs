@@ -11,15 +11,15 @@ namespace LaTeXTools.Build.Tasks
         /// Note that this property would may be modified
         /// </summary>
         /// <value></value>
-        public ProcessStartInfo StartInfo { get; set; }
-
-        public RunProcessTask(ProcessStartInfo startInfo)
-        {
-            this.StartInfo = startInfo;
-        }
+        public ProcessStartInfo? StartInfo { get; set; } = null;
 
         public override async ValueTask RunAsync(ILogger? logger)
         {
+            if (this.StartInfo == null)
+            {
+                return;
+            }
+
             await Task.Run(async () =>
             {
                 string action = $"{this.StartInfo.FileName} {this.StartInfo.Arguments}";
