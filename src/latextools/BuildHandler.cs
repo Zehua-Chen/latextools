@@ -23,9 +23,12 @@ namespace latextools
             var build = new LaTexBuild(project);
             BuildTask task = await build.GetBuildTaskAsync();
 
+            Logger logger = new Logger();
+
             try
             {
-                await task.RunAsync(new Logger());
+                logger.LogAction($"working directory: {Environment.CurrentDirectory}");
+                await task.RunAsync(logger);
             }
             catch (Exception e)
             {

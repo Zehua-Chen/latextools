@@ -62,11 +62,6 @@ namespace LaTeXTools.Project
             var project = await JsonSerializer.DeserializeAsync<LaTeXProject>(stream);
 
             project.WorkingDirectory = directory;
-            project.Bin = Path.GetFullPath(project.Bin, directory);
-            project.Entry = Path.GetFullPath(project.Entry, directory);
-            project.Includes = project.Includes
-                .Select((current) => { return Path.GetFullPath(current, directory); })
-                .ToArray();
 
             switch (project.Bib)
             {

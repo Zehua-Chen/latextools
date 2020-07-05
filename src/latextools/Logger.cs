@@ -7,12 +7,15 @@ namespace latextools
     {
         public void LogAction(string action)
         {
-            var originalColor = Console.ForegroundColor;
+            lock (this)
+            {
+                var originalColor = Console.ForegroundColor;
 
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"==> {action}");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"==> {action}");
 
-            Console.ForegroundColor = originalColor;
+                Console.ForegroundColor = originalColor;
+            }
         }
 
         public void LogStdOut(string action, string stdout)
@@ -22,13 +25,16 @@ namespace latextools
                 return;
             }
 
-            var originalColor = Console.ForegroundColor;
+            lock (this)
+            {
+                var originalColor = Console.ForegroundColor;
 
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"==> {action}");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"==> {action}");
 
-            Console.ForegroundColor = originalColor;
-            Console.WriteLine(stdout);
+                Console.ForegroundColor = originalColor;
+                Console.WriteLine(stdout);
+            }
         }
 
         public void LogStdErr(string action, string stderr)
@@ -38,15 +44,18 @@ namespace latextools
                 return;
             }
 
-            Console.WriteLine(stderr.Length);
+            lock (this)
+            {
+                Console.WriteLine(stderr.Length);
 
-            var originalColor = Console.ForegroundColor;
+                var originalColor = Console.ForegroundColor;
 
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"==> {action}");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"==> {action}");
 
-            Console.ForegroundColor = originalColor;
-            Console.WriteLine(stderr);
+                Console.ForegroundColor = originalColor;
+                Console.WriteLine(stderr);
+            }
         }
     }
 }
