@@ -2,3 +2,5 @@ sections/
 *.tex
 *.bib
 latexproject.json
+
+*.zip
