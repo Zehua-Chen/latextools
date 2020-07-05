@@ -8,7 +8,7 @@ namespace LaTeXTools.Build.Tasks
 {
     public sealed class ProjectTask
     {
-        public string OutputFilePath { get; set; } = "";
+        public string OutputPDFPath { get; set; } = "";
         public string OutputDirectory { get; set; } = "";
         public IEnumerable<string>? DependencyPaths { get; set; }
         public IEnumerable<BuildTask>? BuildTasks  { get; set; }
@@ -41,7 +41,7 @@ namespace LaTeXTools.Build.Tasks
 
         private bool ShouldRun()
         {
-            if (!File.Exists(this.OutputFilePath))
+            if (!File.Exists(this.OutputPDFPath))
             {
                 return true;
             }
@@ -51,7 +51,7 @@ namespace LaTeXTools.Build.Tasks
                 return false;
             }
 
-            var pdfWriteTime = (new FileInfo(this.OutputFilePath)).LastWriteTimeUtc;
+            var pdfWriteTime = (new FileInfo(this.OutputPDFPath)).LastWriteTimeUtc;
 
             foreach (var file in this.DependencyPaths)
             {

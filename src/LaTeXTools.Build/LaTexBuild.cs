@@ -20,7 +20,13 @@ namespace LaTeXTools.Build
         {
             this.Root.Validate();
 
-            string oldAUX = await File.ReadAllTextAsync(this.Root.GetAUXPath());
+            string oldAUX = "";
+
+            if (File.Exists(this.Root.GetAUXPath()))
+            {
+                oldAUX = await File.ReadAllTextAsync(this.Root.GetAUXPath());
+            }
+
             var buildTasks = new List<BuildTask>()
             {
                 new RunProcessTask()
@@ -51,7 +57,7 @@ namespace LaTeXTools.Build
 
             var task = new ProjectTask()
             {
-                OutputFilePath = this.Root.GetPDFPath(),
+                OutputPDFPath = this.Root.GetPDFPath(),
                 OutputDirectory = this.Root.Bin,
                 DependencyPaths = this.GetIncludes(),
                 BuildTasks = buildTasks

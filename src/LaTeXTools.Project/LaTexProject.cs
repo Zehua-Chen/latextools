@@ -27,9 +27,7 @@ namespace LaTeXTools.Project
         [JsonIgnore]
         public string WorkingDirectory { get; set; } = Environment.CurrentDirectory;
 
-        public static async ValueTask<LaTeXProject> FindAsync(
-            string filename,
-            LaTeXProject @default)
+        public static async ValueTask<LaTeXProject?> FindAsync(string filename)
         {
             string current = Environment.CurrentDirectory;
             string root = Path.GetPathRoot(current)!;
@@ -46,7 +44,7 @@ namespace LaTeXTools.Project
                 return await LoadAsync(path);
             }
 
-            return @default;
+            return null;
         }
 
         public static async ValueTask<LaTeXProject> LoadAsync(string path)

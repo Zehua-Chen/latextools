@@ -11,9 +11,14 @@ namespace latextools
     {
         public async Task<int> InvokeAsync(InvocationContext context)
         {
-            LaTeXProject project = await LaTeXProject.FindAsync(
-                "latexproject.json",
-                new LaTeXProject());
+            var logger = new Logger();
+            LaTeXProject? project = await LaTeXProject.FindAsync("latexproject.json");
+
+            if (project == null)
+            {
+                logger.LogAction("no project found");
+                return -1;
+            }
 
             if (Environment.CurrentDirectory != project.WorkingDirectory)
             {
@@ -21,8 +26,6 @@ namespace latextools
             }
 
             var build = new LaTexBuild(project);
-            var logger = new Logger();
-
             ProjectTask task = await build.GetBuildTaskAsync();
 
             try

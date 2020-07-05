@@ -4,3 +4,4 @@ sections/
 latexproject.json
 
 *.zip
+Makefile
