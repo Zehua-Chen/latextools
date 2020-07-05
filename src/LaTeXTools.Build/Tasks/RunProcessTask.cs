@@ -1,10 +1,16 @@
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.IO;
+using LaTeXTools.Build.Log;
 
 namespace LaTeXTools.Build.Tasks
 {
     public class RunProcessTask : BuildTask
     {
+        /// <summary>
+        /// Note that this property would may be modified
+        /// </summary>
+        /// <value></value>
         public ProcessStartInfo StartInfo { get; set; }
 
         public RunProcessTask(ProcessStartInfo startInfo)
@@ -12,11 +18,20 @@ namespace LaTeXTools.Build.Tasks
             this.StartInfo = startInfo;
         }
 
-        public override async ValueTask RunAsync()
+        public override async ValueTask RunAsync(ILogger? logger)
         {
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
-                Process.Start(this.StartInfo).WaitForExit();
+                string action = $"{this.StartInfo.FileName} {this.StartInfo.Arguments}";
+
+                this.StartInfo.RedirectStandardError = true;
+                this.StartInfo.RedirectStandardOutput = true;
+
+                var process = Process.Start(this.StartInfo);
+                process.WaitForExit();
+
+                logger?.LogStdOut(action, await process.StandardOutput.ReadToEndAsync());
+                logger?.LogStdErr(action, await process.StandardError.ReadToEndAsync());
             });
         }
     }

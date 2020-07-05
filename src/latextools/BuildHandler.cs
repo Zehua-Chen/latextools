@@ -20,12 +20,12 @@ namespace latextools
                 Environment.CurrentDirectory = project.WorkingDirectory;
             }
 
-            var build = new LaTexBuild(project, TaskScheduler.Current);
+            var build = new LaTexBuild(project);
             BuildTask task = await build.GetBuildTaskAsync();
 
             try
             {
-                await task.RunAsync();
+                await task.RunAsync(new Logger());
             }
             catch (Exception e)
             {

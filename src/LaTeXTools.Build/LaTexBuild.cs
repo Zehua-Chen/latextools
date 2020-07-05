@@ -1,25 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.IO;
-using System.Diagnostics;
 using LaTeXTools.Project;
 using LaTeXTools.Build.Tasks;
+using LaTeXTools.Build.Log;
 
 namespace LaTeXTools.Build
 {
     public class LaTexBuild
     {
-        TaskFactory _taskFactory;
-
         public LaTeXProject Root { get; private set; }
-        public TaskScheduler Scheduler { get; private set; }
 
-        public LaTexBuild(LaTeXProject root, TaskScheduler scheduler)
+        public LaTexBuild(LaTeXProject root)
         {
             this.Root = root;
-            this.Scheduler = scheduler;
-            _taskFactory = new TaskFactory(scheduler);
         }
 
         public async ValueTask<BuildTask> GetBuildTaskAsync()

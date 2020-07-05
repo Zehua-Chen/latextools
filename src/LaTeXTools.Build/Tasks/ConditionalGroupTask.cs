@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using System.Diagnostics;
+using LaTeXTools.Build.Log;
 
 namespace LaTeXTools.Build.Tasks
 {
@@ -8,11 +8,11 @@ namespace LaTeXTools.Build.Tasks
     {
         public Func<ValueTask<bool>> Condition { get; set; } = () => new ValueTask<bool>(false);
 
-        public override async ValueTask RunAsync()
+        public override async ValueTask RunAsync(ILogger? logger)
         {
             if (await this.Condition())
             {
-                await base.RunAsync();
+                await base.RunAsync(logger);
             }
         }
     }

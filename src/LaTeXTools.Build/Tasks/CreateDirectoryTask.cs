@@ -1,5 +1,5 @@
-using System.IO;
 using System.Threading.Tasks;
+using LaTeXTools.Build.Log;
 
 namespace LaTeXTools.Build.Tasks
 {
@@ -12,10 +12,11 @@ namespace LaTeXTools.Build.Tasks
             this.Directory = directory;
         }
 
-        public override ValueTask RunAsync()
+        public override ValueTask RunAsync(ILogger? logger)
         {
             if (!System.IO.Directory.Exists(this.Directory))
             {
+                logger?.LogAction($"create directory: {this.Directory}");
                 System.IO.Directory.CreateDirectory(this.Directory);
             }
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using LaTeXTools.Build.Log;
 
 namespace LaTeXTools.Build.Tasks
 {
@@ -9,28 +10,28 @@ namespace LaTeXTools.Build.Tasks
         public bool Synchronous { get; set; } = true;
         public List<BuildTask> Children { get; set; } = new List<BuildTask>();
 
-        public override async ValueTask RunAsync()
+        public override async ValueTask RunAsync(ILogger? logger)
         {
             if (this.Synchronous)
             {
-                await this.RunSynchronouslyAsync();
+                await this.RunSynchronouslyAsync(logger);
             }
             else
             {
-                await this.RunAsynchronouslyAsync();
+                await this.RunAsynchronouslyAsync(logger);
             }
         }
 
-        private ValueTask RunAsynchronouslyAsync()
+        private ValueTask RunAsynchronouslyAsync(ILogger? logger)
         {
             throw new NotImplementedException();
         }
 
-        private async ValueTask RunSynchronouslyAsync()
+        private async ValueTask RunSynchronouslyAsync(ILogger? logger)
         {
             foreach (var task in this.Children)
             {
-                await task.RunAsync();
+                await task.RunAsync(logger);
             }
         }
     }

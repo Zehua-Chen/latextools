@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using LaTeXTools.Build.Log;
 
 namespace LaTeXTools.Build.Tasks
 {
@@ -6,7 +7,7 @@ namespace LaTeXTools.Build.Tasks
     {
         public string? Name { get; set; }
 
-        public virtual ValueTask RunAsync()
+        public virtual ValueTask RunAsync(ILogger? logger)
         {
             return new ValueTask();
         }

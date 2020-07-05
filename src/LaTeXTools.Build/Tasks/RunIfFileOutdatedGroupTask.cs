@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.IO;
+using LaTeXTools.Build.Log;
 
 namespace LaTeXTools.Build.Tasks
 {
@@ -9,14 +10,14 @@ namespace LaTeXTools.Build.Tasks
         public string FilePath { get; set; } = "";
         public IEnumerable<string>? DependencyPaths { get; set; }
 
-        public override async ValueTask RunAsync()
+        public override async ValueTask RunAsync(ILogger? logger)
         {
             if (!this.ShouldRun())
             {
                 return;
             }
 
-            await base.RunAsync();
+            await base.RunAsync(logger);
         }
 
         private bool ShouldRun()
