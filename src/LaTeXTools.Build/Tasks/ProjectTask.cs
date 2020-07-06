@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using LaTeXTools.Build.Log;
 
@@ -23,6 +22,7 @@ namespace LaTeXTools.Build.Tasks
 
             if (!this.ShouldRun())
             {
+                logger?.LogAction("no build needed");
                 return;
             }
 
