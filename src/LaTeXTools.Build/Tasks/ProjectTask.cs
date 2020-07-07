@@ -22,7 +22,7 @@ namespace LaTeXTools.Build.Tasks
 
             if (!this.ShouldRun())
             {
-                logger?.LogAction("no build needed");
+                logger?.LogMessage("no build needed");
                 return;
             }
 

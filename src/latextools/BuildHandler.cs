@@ -16,7 +16,7 @@ namespace latextools
 
             if (project == null)
             {
-                logger.LogAction("no project found");
+                logger.LogMessage("no project found");
                 return -1;
             }
 
@@ -30,7 +30,7 @@ namespace latextools
 
             try
             {
-                logger.LogAction($"working directory: {Environment.CurrentDirectory}");
+                logger.LogMessage($"working directory: {Environment.CurrentDirectory}");
                 await task.RunAsync(logger);
             }
             catch (Exception e)

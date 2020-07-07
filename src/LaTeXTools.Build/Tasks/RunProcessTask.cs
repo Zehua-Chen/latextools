@@ -24,7 +24,7 @@ namespace LaTeXTools.Build.Tasks
             {
                 string action = $"{this.StartInfo.FileName} {this.StartInfo.Arguments}";
 
-                logger?.LogAction(action);
+                logger?.LogMessage(action);
 
                 this.StartInfo.RedirectStandardError = true;
                 this.StartInfo.RedirectStandardOutput = true;

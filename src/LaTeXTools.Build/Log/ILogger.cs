@@ -11,24 +11,24 @@ namespace LaTeXTools.Build.Log
         /// Must be thread safe
         /// </summary>
         /// <param name="title">the action</param>
-        void LogAction(string title);
+        void LogMessage(string title);
 
         /// <summary>
         /// Called to output a stdout of a subprocess
         ///
         /// Must be thread safe
         /// </summary>
-        /// <param name="title">the title of the subprocess</param>
+        /// <param name="invocation">the process's invocation</param>
         /// <param name="stdout">the stdout</param>
-        void LogStdOut(string title, string stdout);
+        void LogStdOut(string invocation, string stdout);
 
         /// <summary>
         /// Called to output the stderr of a subprocess
         ///
         /// Must be thread safe
         /// </summary>
-        /// <param name="title">the title of the subprocess</param>
+        /// <param name="invocation">the subprocess's invocation</param>
         /// <param name="stderr">the stderr</param>
-        void LogStdErr(string action, string stderr);
+        void LogStdErr(string invocation, string stderr);
     }
 }

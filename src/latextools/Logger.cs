@@ -5,20 +5,39 @@ namespace latextools
 {
     public class Logger : ILogger
     {
-        public void LogAction(string action)
+        private struct ConsoleColorGuard : IDisposable
         {
-            lock (this)
+            ConsoleColor _foreground;
+
+            public void Dispose()
             {
-                var originalColor = Console.ForegroundColor;
+                Console.ForegroundColor = _foreground;
+            }
 
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"==> {action}");
+            public static ConsoleColorGuard Current
+            {
+                get
+                {
+                    var guard = new ConsoleColorGuard();
+                    guard._foreground = Console.ForegroundColor;
 
-                Console.ForegroundColor = originalColor;
+                    return guard;
+                }
             }
         }
 
-        public void LogStdOut(string action, string stdout)
+        public void LogMessage(string action)
+        {
+            lock (this)
+            {
+                using ConsoleColorGuard guard = ConsoleColorGuard.Current;
+
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"==> {action}");
+            }
+        }
+
+        public void LogStdOut(string invocation, string stdout)
         {
             if (stdout.Length == 0)
             {
@@ -27,17 +46,16 @@ namespace latextools
 
             lock (this)
             {
-                var originalColor = Console.ForegroundColor;
+                // using ConsoleColorGuard guard = ConsoleColorGuard.Current;
+                Console.WriteLine(invocation);
+                Console.WriteLine();
 
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"==> {action}");
-
-                Console.ForegroundColor = originalColor;
                 Console.WriteLine(stdout);
+                Console.WriteLine();
             }
         }
 
-        public void LogStdErr(string action, string stderr)
+        public void LogStdErr(string invocation, string stderr)
         {
             if (stderr.Length == 0)
             {
@@ -46,15 +64,14 @@ namespace latextools
 
             lock (this)
             {
-                Console.WriteLine(stderr.Length);
-
-                var originalColor = Console.ForegroundColor;
+                using ConsoleColorGuard guard = ConsoleColorGuard.Current;
 
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"==> {action}");
+                Console.WriteLine(invocation);
+                Console.WriteLine();
 
-                Console.ForegroundColor = originalColor;
                 Console.WriteLine(stderr);
+                Console.WriteLine();
             }
         }
     }
