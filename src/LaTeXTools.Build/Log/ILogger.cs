@@ -6,12 +6,20 @@ namespace LaTeXTools.Build.Log
     public interface ILogger
     {
         /// <summary>
-        /// Called when an action happens
+        /// Log message
         ///
         /// Must be thread safe
         /// </summary>
-        /// <param name="title">the action</param>
-        void LogMessage(string title);
+        /// <param name="message">the message</param>
+        void LogMessage(string message);
+
+        /// <summary>
+        /// Log message
+        ///
+        /// Must be thread safe
+        /// </summary>
+        /// <param name="error">the error</param>
+        void LogError(string error);
 
         /// <summary>
         /// Called to output a stdout of a subprocess

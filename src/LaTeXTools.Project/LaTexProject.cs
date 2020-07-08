@@ -34,7 +34,14 @@ namespace LaTeXTools.Project
 
             while (!File.Exists(Path.Combine(current, filename)) || current == root)
             {
-                current = Path.GetDirectoryName(current)!;
+                string? parent = Path.GetDirectoryName(current);
+
+                if (parent == null)
+                {
+                    return null;
+                }
+
+                current = parent;
             }
 
             string path = Path.Combine(current, filename);

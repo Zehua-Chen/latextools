@@ -37,6 +37,17 @@ namespace latextools
             }
         }
 
+        public void LogError(string error)
+        {
+            lock (this)
+            {
+                using ConsoleColorGuard guard = ConsoleColorGuard.Current;
+
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"==> {error}");
+            }
+        }
+
         public void LogStdOut(string invocation, string stdout)
         {
             if (stdout.Length == 0)

@@ -16,7 +16,7 @@ namespace latextools
 
             if (project == null)
             {
-                logger.LogMessage("no project found");
+                logger.LogError("no project found");
                 return -1;
             }
 
