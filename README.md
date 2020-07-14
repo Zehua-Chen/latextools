@@ -4,7 +4,7 @@ Tools used with latex
 
 ## Get Started
 
-1. Create a folder named `paper`
+1. Create a folder named `paper` and navigate to the folder
 2. Create a file named `index.tex`
    ```tex
    \documentclass{article}
