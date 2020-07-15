@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.IO;
-using System.Linq;
 
 namespace LaTeXTools.Project
 {
@@ -26,6 +25,17 @@ namespace LaTeXTools.Project
 
         [JsonIgnore]
         public string WorkingDirectory { get; set; } = Environment.CurrentDirectory;
+
+        public async ValueTask WriteAsync(string path)
+        {
+            using FileStream file = File.OpenWrite(path);
+            JsonSerializerOptions options = new JsonSerializerOptions()
+            {
+                WriteIndented = true,
+            };
+
+            await JsonSerializer.SerializeAsync(file, this, options);
+        }
 
         public static async ValueTask<LaTeXProject?> FindAsync(string filename)
         {

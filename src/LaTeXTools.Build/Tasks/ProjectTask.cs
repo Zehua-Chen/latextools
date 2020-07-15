@@ -10,7 +10,7 @@ namespace LaTeXTools.Build.Tasks
         public string OutputPDFPath { get; set; } = "";
         public string OutputDirectory { get; set; } = "";
         public IEnumerable<string>? DependencyPaths { get; set; }
-        public IEnumerable<BuildTask>? BuildTasks  { get; set; }
+        public IEnumerable<BuildTask>? BuildTasks { get; set; }
         public IEnumerable<ProjectTask>? SubProjects { get; set; }
 
         public async ValueTask RunAsync(ILogger? logger = null)
