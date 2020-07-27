@@ -10,7 +10,7 @@ namespace LaTeXTools.Project
             return new ProcessStartInfo()
             {
                 FileName = project.LaTex,
-                Arguments = $"-output-directory={project.Bin} {project.Entry}",
+                Arguments = $"-output-directory={project.Bin} -halt-on-error {project.Entry}",
             };
         }
 
