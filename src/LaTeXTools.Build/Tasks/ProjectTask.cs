@@ -13,6 +13,14 @@ namespace LaTeXTools.Build.Tasks
         public IEnumerable<BuildTask>? BuildTasks { get; set; }
         public IEnumerable<ProjectTask>? SubProjects { get; set; }
 
+        /// <summary>
+        /// Run the task
+        /// </summary>
+        /// <param name="logger">an optional logger</param>
+        /// <exception cref="LaTeXTools.Build.AbortException">
+        /// Thrown when the build needs to be aborted
+        /// </exception>
+        /// <returns></returns>
         public async ValueTask RunAsync(ILogger? logger = null)
         {
             if (!Directory.Exists(this.OutputDirectory))

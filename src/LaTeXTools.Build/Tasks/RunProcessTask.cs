@@ -34,6 +34,14 @@ namespace LaTeXTools.Build.Tasks
 
                 logger?.LogStdOut(action, await process.StandardOutput.ReadToEndAsync());
                 logger?.LogStdErr(action, await process.StandardError.ReadToEndAsync());
+
+                if (process.ExitCode != 0)
+                {
+                    throw new AbortException()
+                    {
+                        ExitCode = process.ExitCode
+                    };
+                }
             });
         }
     }

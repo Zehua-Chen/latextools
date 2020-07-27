@@ -48,8 +48,6 @@ namespace LaTeXTools.Build
                 Condition = async () =>
                 {
                     string newAUX = await File.ReadAllTextAsync(this.Root.GetAUXPath());
-
-                    Console.WriteLine($"{oldAUX.Length}, {newAUX.Length}");
                     return newAUX != oldAUX;
                 },
                 StartInfo = this.Root.GetLaTeXStartInfo()

@@ -33,6 +33,10 @@ namespace latextools
                 logger.LogMessage($"working directory: {Environment.CurrentDirectory}");
                 await task.RunAsync(logger);
             }
+            catch (AbortException abortException)
+            {
+                logger.LogError($"process exited with code {abortException.ExitCode}");
+            }
             catch (Exception e)
             {
                 Console.WriteLine(e);
