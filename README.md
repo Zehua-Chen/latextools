@@ -10,7 +10,7 @@ Tools used with latex
    ```
    latextools build
    ```
-4. The PDF should be at `bin/index.pdf`
+4. `latextools open` would open the pdf file
 
 ## Commands
 
@@ -26,7 +26,6 @@ latextools build
 
 Build the project and then rebuild it if needed
 
-
 ```
 latextools clean
 ```
@@ -38,3 +37,9 @@ latextools generate
 ```
 
 Generate a Makefile for this project
+
+```
+latextools open
+```
+
+Open the pdf file

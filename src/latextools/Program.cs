@@ -25,12 +25,16 @@ namespace latextools
             var generate = new Command("generate", "Generate a Makefile");
             generate.Handler = new GenerateHandler();
 
+            var open = new Command("open", "Open the pdf file");
+            open.Handler = new OpenHandler();
+
             RootCommand application = new RootCommand("LaTeX tools")
             {
                 @new,
                 build,
                 clean,
                 generate,
+                open
             };
 
             await application.InvokeAsync(args);
