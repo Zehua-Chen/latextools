@@ -4,7 +4,7 @@ Tools used with latex
 
 ## Get Started
 
-1. `dotnet new --name project`
+1. `latextools new --name project`
 2. Enter folder `project` (`cd project`)
 3. Invoke in command line
    ```
