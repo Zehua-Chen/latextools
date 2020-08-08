@@ -4,7 +4,7 @@
   "author": "Zehua-Chen <peterchen06242000@outlook.com>",
   "license": "MIT",
   "scripts": {
-    "build": "gulp publish"
+    "build": "gulp --tasks"
   },
   "devDependencies": {
     "gulp": "^4.0.2",

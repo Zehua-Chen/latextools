@@ -9,7 +9,7 @@ const child = require("child_process");
  * @param {string} rid
  */
 function build(rid) {
-  return (done) => {
+  return function _build(done) {
     let project = path.join("src", "latextools", "latextools.csproj");
     let stream = child.spawn("dotnet", [
       "publish",
@@ -62,7 +62,7 @@ function getPublishPath(rid) {
  * @param {string} rid
  */
 function removeDebug(rid) {
-  return () => {
+  return function _removeDebug() {
     return gulp.src(path.join(getPublishPath(rid), "*.pdb")).pipe(gulpClean());
   };
 }
@@ -72,7 +72,7 @@ function removeDebug(rid) {
  * @param {string} rid
  */
 function zip(rid) {
-  return () => {
+  return function _zip() {
     return gulp
       .src(path.join(getPublishPath(rid), "*"))
       .pipe(gulpZip(`latextools-${rid}.zip`))
