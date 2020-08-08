@@ -4,11 +4,13 @@ const gulpZip = require("gulp-zip");
 const path = require("path");
 const child = require("child_process");
 
+/**
+ * Returns a task that handles this rid
+ * @param {string} rid
+ */
 function build(rid) {
   return (done) => {
-    console.log("build");
     let project = path.join("src", "latextools", "latextools.csproj");
-
     let stream = child.spawn("dotnet", [
       "publish",
       "-c",
@@ -31,13 +33,18 @@ function build(rid) {
     stream.on("close", (code) => {
       if (code) {
         done(`process exit with code ${code}`);
+        return;
       }
-    });
 
-    done();
+      done();
+    });
   };
 }
 
+/**
+ * Get the publish path for this rid
+ * @param {string} rid
+ */
 function getPublishPath(rid) {
   return path.join(
     "src",
@@ -50,12 +57,20 @@ function getPublishPath(rid) {
   );
 }
 
+/**
+ * Returns a task that removes debug symbols for build of this rid
+ * @param {string} rid
+ */
 function removeDebug(rid) {
   return () => {
     return gulp.src(path.join(getPublishPath(rid), "*.pdb")).pipe(gulpClean());
   };
 }
 
+/**
+ * Returns a task that create zip file for build of this rid
+ * @param {string} rid
+ */
 function zip(rid) {
   return () => {
     return gulp
@@ -65,6 +80,10 @@ function zip(rid) {
   };
 }
 
+/**
+ * Returns a task that package for this rid
+ * @param {string} rid
+ */
 function package(rid) {
   return gulp.series(removeDebug(rid), zip(rid));
 }
