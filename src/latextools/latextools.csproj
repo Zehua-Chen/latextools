@@ -21,7 +21,7 @@
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20303.1" />
   </ItemGroup>
 
-  <Target Name="Create Packages" AfterTargets="Build">
+  <Target Condition="$(Configuration) == 'Release'" Name="Create Packages" AfterTargets="Build">
     <ZipDirectory
       SourceDirectory="$(OutputPath)\publish\"
       DestinationFile="$(MSBuildProjectDirectory)\latextools-$(RuntimeIdentifier).zip" />
