@@ -1,5 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseAppHost>true</UseAppHost>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(Configuration) == 'Release'">
+    <PublishTrimmed>true</PublishTrimmed>
+    <TrimMode>Link</TrimMode>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\LaTeXTools.Project\LaTeXTools.Project.csproj" />
     <ProjectReference Include="..\LaTeXTools.Build\LaTeXTools.Build.csproj" />
@@ -9,11 +21,10 @@
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20303.1" />
   </ItemGroup>
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Nullable>enable</Nullable>
-    <UseAppHost>true</UseAppHost>
-  </PropertyGroup>
+  <Target Name="Create Packages" AfterTargets="Build">
+    <ZipDirectory
+      SourceDirectory="$(OutputPath)\publish\"
+      DestinationFile="$(MSBuildProjectDirectory)\latextools-$(RuntimeIdentifier).zip" />
+  </Target>
 
 </Project>

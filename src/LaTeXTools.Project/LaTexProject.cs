@@ -76,6 +76,11 @@ namespace LaTeXTools.Project
 
             var project = await JsonSerializer.DeserializeAsync<LaTeXProject>(stream);
 
+            if (project == null)
+            {
+                throw new Exception($"Failed to parse project at {path}");
+            }
+
             project.WorkingDirectory = directory;
 
             switch (project.Bib)
