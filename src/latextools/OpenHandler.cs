@@ -32,7 +32,14 @@ namespace latextools
             await Task.Run(() =>
             {
                 logger.LogMessage($"{startInfo.FileName} {startInfo.Arguments}");
-                System.Diagnostics.Process.Start(startInfo).WaitForExit();
+                var process = System.Diagnostics.Process.Start(startInfo);
+
+                if (process == null)
+                {
+                    throw new Exception($"Failed to start {startInfo.FileName}");
+                }
+
+                process.WaitForExit();
             });
 
             return 0;

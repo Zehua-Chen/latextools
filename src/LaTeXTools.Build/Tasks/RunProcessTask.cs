@@ -1,6 +1,6 @@
+using System;
 using System.Threading.Tasks;
 using System.Diagnostics;
-using System.IO;
 using LaTeXTools.Build.Log;
 
 namespace LaTeXTools.Build.Tasks
@@ -22,14 +22,20 @@ namespace LaTeXTools.Build.Tasks
 
             await Task.Run(async () =>
             {
-                string action = $"{this.StartInfo.FileName} {this.StartInfo.Arguments}";
+                string action = $"{StartInfo.FileName} {StartInfo.Arguments}";
 
                 logger?.LogMessage(action);
 
-                this.StartInfo.RedirectStandardError = true;
-                this.StartInfo.RedirectStandardOutput = true;
+                StartInfo.RedirectStandardError = true;
+                StartInfo.RedirectStandardOutput = true;
 
-                var process = Process.Start(this.StartInfo);
+                var process = Process.Start(StartInfo);
+
+                if (process == null)
+                {
+                    throw new Exception($"Faield to start proeces {StartInfo.FileName}");
+                }
+
                 process.WaitForExit();
 
                 logger?.LogStdOut(action, await process.StandardOutput.ReadToEndAsync());
