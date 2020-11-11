@@ -1,14 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <ItemGroup>
-    <ProjectReference Include="..\LaTeXTools.Project\LaTeXTools.Project.csproj" />
-    <ProjectReference Include="..\LaTeXTools.Build\LaTeXTools.Build.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20303.1" />
-  </ItemGroup>
-
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
@@ -20,5 +11,20 @@
     <PublishTrimmed>true</PublishTrimmed>
     <TrimMode>Link</TrimMode>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LaTeXTools.Project\LaTeXTools.Project.csproj" />
+    <ProjectReference Include="..\LaTeXTools.Build\LaTeXTools.Build.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20303.1" />
+  </ItemGroup>
+
+  <Target Name="Create Packages" AfterTargets="Build">
+    <ZipDirectory
+      SourceDirectory="$(OutputPath)\publish\"
+      DestinationFile="$(MSBuildProjectDirectory)\latextools-$(RuntimeIdentifier).zip" />
+  </Target>
 
 </Project>
