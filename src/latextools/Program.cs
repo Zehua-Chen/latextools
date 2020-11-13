@@ -1,5 +1,4 @@
-﻿using System;
-using System.CommandLine;
+﻿using System.CommandLine;
 using System.Threading.Tasks;
 
 namespace latextools
@@ -22,8 +21,8 @@ namespace latextools
             var clean = new Command("clean", "Clean the build folder");
             clean.Handler = new CleanHandler();
 
-            var generate = new Command("generate", "Generate a Makefile");
-            generate.Handler = new GenerateHandler();
+            var export = new Command("export", "Export a Makefile");
+            export.Handler = new ExportHandler();
 
             var open = new Command("open", "Open the pdf file");
             open.Handler = new OpenHandler();
@@ -33,7 +32,7 @@ namespace latextools
                 @new,
                 build,
                 clean,
-                generate,
+                export,
                 open
             };
 
