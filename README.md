@@ -43,3 +43,10 @@ latextools open
 ```
 
 Open the pdf file
+
+## Development
+
+### Publish
+
+1. Go to `src/latextools`, and run
+   - `dotnet publish -c Release -r osx-x64`

@@ -21,10 +21,17 @@
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20303.1" />
   </ItemGroup>
 
-  <Target Condition="$(Configuration) == 'Release'" Name="Create Packages" AfterTargets="Build">
+  <Target Condition="$(Configuration) == 'Release'" Name="Create Packages" AfterTargets="Publish">
+    <PropertyGroup>
+      <ZipFile>$(MSBuildProjectDirectory)\latextools-$(RuntimeIdentifier).zip</ZipFile>
+    </PropertyGroup>
+
+    <Message Text="Removing old $(ZipFile)" Importance="High" />
+    <Delete Files="$(ZipFile)" />
+    <Message Text="Creating new $(ZipFile)" Importance="High" />
+
     <ZipDirectory
       SourceDirectory="$(OutputPath)\publish\"
-      DestinationFile="$(MSBuildProjectDirectory)\latextools-$(RuntimeIdentifier).zip" />
+      DestinationFile="$(ZipFile)" />
   </Target>
-
 </Project>
