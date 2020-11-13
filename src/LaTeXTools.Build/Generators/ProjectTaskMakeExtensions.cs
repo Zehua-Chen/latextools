@@ -1,10 +1,9 @@
-using System.Collections.Generic;
 using System.Diagnostics;
 using LaTeXTools.Build.Tasks;
 
 namespace LaTeXTools.Build.Generators
 {
-    public static class ProjectTaskMake
+    public static class ProjectTaskMakeExtensions
     {
         public static Makefile GetMakefile(this ProjectTask projectTask)
         {
@@ -22,10 +21,10 @@ namespace LaTeXTools.Build.Generators
 
         private static void HandleProject(Makefile make, ProjectTask projectTask)
         {
-            make.Targets.Add(ProjectTaskMake.GetCleanTarget(projectTask));
-            make.Targets.Add(ProjectTaskMake.GetBinTarget(projectTask));
+            make.Targets.Add(GetCleanTarget(projectTask));
+            make.Targets.Add(GetBinTarget(projectTask));
 
-            var pdfTarget = ProjectTaskMake.GetPDFTarget(projectTask);
+            var pdfTarget = GetPDFTarget(projectTask);
             make.Targets.Add(pdfTarget);
 
             if (projectTask.SubProjects != null)
@@ -53,7 +52,6 @@ namespace LaTeXTools.Build.Generators
         {
             MakeTarget target = new MakeTarget();
 
-            target.IsPhony = true;
             target.Name = $"{projectTask.OutputDirectory}";
             target.Commands.Add($"mkdir {projectTask.OutputDirectory}");
 

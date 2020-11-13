@@ -9,7 +9,7 @@ using LaTeXTools.Build.Generators;
 
 namespace latextools
 {
-    public class GenerateHandler : ICommandHandler
+    public class ExportHandler : ICommandHandler
     {
         public async Task<int> InvokeAsync(InvocationContext context)
         {
