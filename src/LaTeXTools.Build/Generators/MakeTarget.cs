@@ -6,13 +6,13 @@ namespace LaTeXTools.Build.Generators
 {
     public class MakeTarget
     {
-        public string Name { get; set; } = "x";
+        public string Name { get; set; } = "target";
         public bool IsPhony { get; set; } = false;
-        public List<string> Commands { get; private set; } = new List<string>();
-        public List<string> Dependencies { get; private set; } = new List<string>();
-        public List<string> OrderOnlyDependencies { get; private set; } = new List<string>();
+        public List<string> Commands { get; set; } = new List<string>();
+        public List<string> Dependencies { get; set; } = new List<string>();
+        public List<string> OrderOnlyDependencies { get; set; } = new List<string>();
 
-        public async ValueTask Write(StreamWriter writer)
+        public async ValueTask Write(TextWriter writer)
         {
             bool finishWithEndLine = false;
 
