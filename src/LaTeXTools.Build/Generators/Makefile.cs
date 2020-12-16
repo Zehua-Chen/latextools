@@ -6,18 +6,17 @@ namespace LaTeXTools.Build.Generators
 {
     public class Makefile
     {
-        public List<MakeTarget> Targets { get; private set; } = new List<MakeTarget>();
+        public string TopLevelComment { get; set; } = "# Generated Makefile";
+        public List<MakeTarget> Targets { get; set; } = new List<MakeTarget>();
 
-        public async ValueTask Write(string path)
+        public async ValueTask WriteAsync(TextWriter writer)
         {
-            using StreamWriter writer = File.CreateText(path);
-
-            await writer.WriteLineAsync("# Generated Makefile");
+            await writer.WriteLineAsync(TopLevelComment);
             await writer.WriteLineAsync();
 
             foreach (var target in this.Targets)
             {
-                await target.Write(writer);
+                await target.WriteAsync(writer);
                 await writer.WriteLineAsync();
             }
         }

@@ -10,7 +10,7 @@ namespace LaTeXTools.Build.Tests.Generators
 {
     public class MakeTargetTests
     {
-        private class Data: IEnumerable<object[]>
+        private class Data : IEnumerable<object[]>
         {
             private object[] Regular()
             {
@@ -89,10 +89,10 @@ namespace LaTeXTools.Build.Tests.Generators
 
         [Theory]
         [ClassData(typeof(Data))]
-        public async Task Output(MakeTarget target, string expected)
+        public async Task Write(MakeTarget target, string expected)
         {
             using var writer = new StringWriter();
-            await target.Write(writer);
+            await target.WriteAsync(writer);
 
             string actual = writer.ToString();
             Assert.Equal(expected, actual);

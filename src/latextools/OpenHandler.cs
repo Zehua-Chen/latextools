@@ -8,7 +8,7 @@ using LaTeXTools.Project;
 
 namespace latextools
 {
-    public class OpenHandler: ICommandHandler
+    public class OpenHandler : ICommandHandler
     {
         public async Task<int> InvokeAsync(InvocationContext context)
         {

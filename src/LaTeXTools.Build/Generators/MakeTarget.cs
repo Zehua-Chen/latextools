@@ -12,7 +12,7 @@ namespace LaTeXTools.Build.Generators
         public List<string> Dependencies { get; set; } = new List<string>();
         public List<string> OrderOnlyDependencies { get; set; } = new List<string>();
 
-        public async ValueTask Write(TextWriter writer)
+        public async ValueTask WriteAsync(TextWriter writer)
         {
             bool finishWithEndLine = false;
 
@@ -21,10 +21,11 @@ namespace LaTeXTools.Build.Generators
                 await writer.WriteLineAsync($".PHONY: {this.Name}");
             }
 
-            await writer.WriteAsync($"{this.Name}: ");
+            await writer.WriteAsync($"{this.Name}:");
 
             if (this.Dependencies.Count > 0)
             {
+                await writer.WriteAsync(" ");
                 string dependencies = string.Join(" ", this.Dependencies);
                 await writer.WriteAsync(dependencies);
             }
