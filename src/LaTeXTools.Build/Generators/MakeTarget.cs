@@ -1,10 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace LaTeXTools.Build.Generators
 {
-    public class MakeTarget
+    public class MakeTarget : IEquatable<MakeTarget>
     {
         public string Name { get; set; } = "target";
         public bool IsPhony { get; set; } = false;
@@ -52,6 +54,20 @@ namespace LaTeXTools.Build.Generators
             {
                 await writer.WriteLineAsync();
             }
+        }
+
+        public bool Equals(MakeTarget? other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+
+            return Name == other.Name
+                && IsPhony == other.IsPhony
+                && Enumerable.SequenceEqual(Commands, other.Commands)
+                && Enumerable.SequenceEqual(Dependencies, other.Dependencies)
+                && Enumerable.SequenceEqual(OrderOnlyDependencies, other.OrderOnlyDependencies);
         }
     }
 }
