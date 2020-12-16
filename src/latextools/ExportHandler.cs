@@ -1,7 +1,6 @@
 using System.CommandLine.Invocation;
 using System.Threading.Tasks;
 using System.IO;
-using System.Text;
 using LaTeXTools.Project;
 using LaTeXTools.Build;
 using LaTeXTools.Build.Tasks;
@@ -27,7 +26,8 @@ namespace latextools
 
             ProjectTask task = await build.GetBuildTaskAsync();
 
-            await task.GetMakefile().Write(makePath);
+            using StreamWriter writer = File.CreateText("Makefile");
+            await task.GetMakefile().WriteAsync(writer);
 
             return 0;
         }

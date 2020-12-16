@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Diagnostics;
 using LaTeXTools.Build.Tasks;
 
@@ -39,23 +40,27 @@ namespace LaTeXTools.Build.Generators
 
         private static MakeTarget GetCleanTarget(ProjectTask projectTask)
         {
-            MakeTarget target = new MakeTarget();
-
-            target.IsPhony = true;
-            target.Name = "clean";
-            target.Commands.Add($"rm -rf {projectTask.OutputDirectory}");
-
-            return target;
+            return new MakeTarget()
+            {
+                IsPhony = true,
+                Name = "clean",
+                Commands = new List<string>()
+                {
+                    $"rm -rf {projectTask.OutputDirectory}"
+                }
+            };
         }
 
         private static MakeTarget GetBinTarget(ProjectTask projectTask)
         {
-            MakeTarget target = new MakeTarget();
-
-            target.Name = $"{projectTask.OutputDirectory}";
-            target.Commands.Add($"mkdir {projectTask.OutputDirectory}");
-
-            return target;
+            return new MakeTarget()
+            {
+                Name = $"{projectTask.OutputDirectory}",
+                Commands = new List<string>()
+                {
+                    $"mkdir {projectTask.OutputDirectory}"
+                }
+            };
         }
 
         private static MakeTarget GetPDFTarget(ProjectTask projectTask)
