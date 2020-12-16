@@ -65,9 +65,9 @@ namespace LaTeXTools.Build.Generators
 
             return Name == other.Name
                 && IsPhony == other.IsPhony
-                && Enumerable.SequenceEqual(Commands, other.Commands)
-                && Enumerable.SequenceEqual(Dependencies, other.Dependencies)
-                && Enumerable.SequenceEqual(OrderOnlyDependencies, other.OrderOnlyDependencies);
+                && Commands.SequenceEqual(other.Commands)
+                && Dependencies.SequenceEqual(other.Dependencies)
+                && OrderOnlyDependencies.SequenceEqual(other.OrderOnlyDependencies);
         }
     }
 }

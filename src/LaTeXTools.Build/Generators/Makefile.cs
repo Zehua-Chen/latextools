@@ -31,7 +31,7 @@ namespace LaTeXTools.Build.Generators
             }
 
             return TopLevelComment == other.TopLevelComment
-                && Enumerable.SequenceEqual(Targets, other.Targets);
+                && Targets.SequenceEqual(other.Targets);
         }
     }
 }
