@@ -3,7 +3,7 @@ using System.IO;
 
 namespace LaTeXTools.Project
 {
-    public static class LaTeXProjectPaths
+    public static class LaTeXProjectPathsExtensions
     {
         public static string GetAUXPath(this LaTeXProject project)
         {
@@ -15,6 +15,12 @@ namespace LaTeXTools.Project
         {
             string document = Path.GetFileNameWithoutExtension(project.Entry);
             return Path.Combine(project.Bin, string.Format("{0}.pdf", document));
+        }
+
+        public static string GetLogPath(this LaTeXProject project)
+        {
+            string document = Path.GetFileNameWithoutExtension(project.Entry);
+            return Path.Combine(project.Bin, string.Format("{0}.log", document));
         }
 
         public static List<string> GetDependencyPaths(this LaTeXProject project)

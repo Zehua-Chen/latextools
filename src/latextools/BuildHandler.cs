@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.CommandLine.Invocation;
 using LaTeXTools.Project;
@@ -36,6 +37,8 @@ namespace latextools
             catch (AbortException abortException)
             {
                 logger.LogError($"process exited with code {abortException.ExitCode}");
+
+                // File.ReadAllText("")
             }
             catch (Exception e)
             {
