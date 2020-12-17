@@ -3,14 +3,14 @@ using System.Diagnostics;
 
 namespace LaTeXTools.Project
 {
-    public static class LaTexProjectProcess
+    public static class LaTeXProjectProcessExtensions
     {
         public static ProcessStartInfo GetLaTeXStartInfo(this LaTeXProject project)
         {
             return new ProcessStartInfo()
             {
-                FileName = project.LaTex,
-                Arguments = $"-output-directory={project.Bin} -halt-on-error {project.Entry}",
+                FileName = project.LaTeX,
+                Arguments = $"-output-directory={project.Bin} -interaction=batchmode {project.Entry}",
             };
         }
 

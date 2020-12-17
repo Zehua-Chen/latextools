@@ -9,7 +9,7 @@ namespace LaTeXTools.Project
     public class LaTeXProject
     {
         [JsonPropertyName("latex")]
-        public string LaTex { get; set; } = "pdflatex";
+        public string LaTeX { get; set; } = "pdflatex";
 
         [JsonPropertyName("bin")]
         public string Bin { get; set; } = "bin";
