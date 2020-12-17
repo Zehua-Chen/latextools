@@ -14,12 +14,20 @@ namespace LaTeXTools.Build.Log
         void Message(string message);
 
         /// <summary>
-        /// Log message
+        /// log error
         ///
         /// Must be thread safe
         /// </summary>
         /// <param name="error">the error</param>
         void Error(string error);
+
+        /// <summary>
+        /// Log log produced by another process
+        ///
+        /// Must be thread safe
+        /// </summary>
+        /// <param name="log">the log content</param>
+        void Log(string log);
 
         /// <summary>
         /// Called to output a stdout of a subprocess

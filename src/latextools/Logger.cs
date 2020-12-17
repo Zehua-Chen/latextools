@@ -48,6 +48,14 @@ namespace latextools
             }
         }
 
+        public void Log(string log)
+        {
+            using ConsoleColorGuard guard = ConsoleColorGuard.Current;
+
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine($"{log}");
+        }
+
         public void StdOut(string invocation, string stdout)
         {
             if (stdout.Length == 0)

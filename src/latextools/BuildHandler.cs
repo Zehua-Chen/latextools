@@ -37,7 +37,7 @@ namespace latextools
             catch (AbortException abortException)
             {
                 logger.Error($"process exited with code {abortException.ExitCode}");
-                logger.Error(File.ReadAllText(project.GetLogPath()));
+                logger.Log(File.ReadAllText(project.GetLogPath()));
             }
             catch (Exception e)
             {
