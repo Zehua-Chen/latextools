@@ -6,22 +6,23 @@ using System.Linq;
 
 namespace LaTeXTools.Build.Generators
 {
-    public class Makefile : IEquatable<Makefile>
+    /// <summary>
+    /// A make file
+    /// </summary>
+    public sealed class Makefile : IEquatable<Makefile>
     {
-        public string TopLevelComment { get; set; } = "# Generated Makefile";
+        /// <summary>
+        /// Top level comment, which would be printed as comment on the the first line of the
+        /// makefile
+        /// </summary>
+        /// <value></value>
+        public string TopLevelComment { get; set; } = "Generated Makefile";
+
+        /// <summary>
+        /// Targets in the makefile.
+        /// </summary>
+        /// <see cref="MakeTarget"></see>
         public List<MakeTarget> Targets { get; set; } = new List<MakeTarget>();
-
-        public async ValueTask WriteAsync(TextWriter writer)
-        {
-            await writer.WriteLineAsync(TopLevelComment);
-            await writer.WriteLineAsync();
-
-            foreach (var target in this.Targets)
-            {
-                await target.WriteAsync(writer);
-                await writer.WriteLineAsync();
-            }
-        }
 
         public bool Equals(Makefile? other)
         {
@@ -32,6 +33,40 @@ namespace LaTeXTools.Build.Generators
 
             return TopLevelComment == other.TopLevelComment
                 && Targets.SequenceEqual(other.Targets);
+        }
+    }
+
+    /// <summary>
+    /// Implement <c>Makefile</c> extensions on <c>TextWriter</c>
+    /// </summary>
+    public static class TextWriterMakefileExtensions
+    {
+        /// <summary>
+        /// Write a makefile
+        /// </summary>
+        /// <param name="writer">the writer responsible for writing</param>
+        /// <param name="makefile">the makefile</param>
+        public static void WriteMakefile(this TextWriter writer, Makefile makefile)
+        {
+            writer.WriteLine($"# {makefile.TopLevelComment}");
+            writer.WriteLine();
+
+            foreach (var target in makefile.Targets)
+            {
+                writer.WriteMakeTarget(target);
+                writer.WriteLine();
+            }
+        }
+
+        /// <summary>
+        /// Write a makefile async
+        /// </summary>
+        /// <param name="writer">the writer responsible for writing</param>
+        /// <param name="makefile">the makefile</param>
+        /// <returns>a task</returns>
+        public static ValueTask WriteMakefileAsync(this TextWriter writer, Makefile makefile)
+        {
+            return new ValueTask(Task.Run(() => writer.WriteMakefile(makefile)));
         }
     }
 }

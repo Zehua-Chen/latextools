@@ -27,7 +27,7 @@ namespace latextools
             ProjectTask task = await build.GetBuildTaskAsync();
 
             using StreamWriter writer = File.CreateText("Makefile");
-            await task.GetMakefile().WriteAsync(writer);
+            await writer.WriteMakefileAsync(task.GetMakefile());
 
             return 0;
         }

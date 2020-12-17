@@ -36,10 +36,10 @@ namespace LaTeXTools.Build.Tests.Generators
                 }
             };
 
-            await makefile.WriteAsync(writer);
+            await writer.WriteMakefileAsync(makefile);
 
             var expected = new StringBuilder();
-            expected.AppendLine(makefile.TopLevelComment);
+            expected.AppendLine($"# {makefile.TopLevelComment}");
             expected.AppendLine();
 
             expected.AppendLine("target1:");

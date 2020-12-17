@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using LaTeXTools.Build.Generators;
+using static LaTeXTools.Build.Generators.TextWriterMakeTargetExtensions;
 
 namespace LaTeXTools.Build.Tests.Generators
 {
@@ -89,10 +90,10 @@ namespace LaTeXTools.Build.Tests.Generators
 
         [Theory]
         [ClassData(typeof(Data))]
-        public async Task Write(MakeTarget target, string expected)
+        public void Write(MakeTarget target, string expected)
         {
             using var writer = new StringWriter();
-            await target.WriteAsync(writer);
+            writer.WriteMakeTarget(target);
 
             string actual = writer.ToString();
             Assert.Equal(expected, actual);
