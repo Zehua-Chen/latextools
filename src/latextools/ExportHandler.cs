@@ -21,7 +21,7 @@ namespace latextools
                 return -1;
             }
 
-            var build = new LaTexBuild(project);
+            var build = new LaTeXBuild(project);
             string makePath = Path.Combine(project.WorkingDirectory, "Makefile");
 
             ProjectTask task = await build.GetBuildTaskAsync();

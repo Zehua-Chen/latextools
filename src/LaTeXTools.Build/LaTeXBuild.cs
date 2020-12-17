@@ -7,11 +7,11 @@ using LaTeXTools.Build.Tasks;
 
 namespace LaTeXTools.Build
 {
-    public class LaTexBuild
+    public class LaTeXBuild
     {
         public LaTeXProject Root { get; private set; }
 
-        public LaTexBuild(LaTeXProject root)
+        public LaTeXBuild(LaTeXProject root)
         {
             this.Root = root;
         }

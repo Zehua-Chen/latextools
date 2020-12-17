@@ -25,7 +25,7 @@ namespace latextools
                 Environment.CurrentDirectory = project.WorkingDirectory;
             }
 
-            var build = new LaTexBuild(project);
+            var build = new LaTeXBuild(project);
             ProjectTask task = await build.GetBuildTaskAsync();
 
             try
