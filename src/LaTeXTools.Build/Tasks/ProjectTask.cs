@@ -30,7 +30,7 @@ namespace LaTeXTools.Build.Tasks
 
             if (!this.ShouldRun())
             {
-                logger?.LogMessage("no build needed");
+                logger?.Message("no build needed");
                 return;
             }
 

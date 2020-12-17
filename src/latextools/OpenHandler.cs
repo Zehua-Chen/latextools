@@ -17,13 +17,13 @@ namespace latextools
 
             if (project == null)
             {
-                logger.LogError("no project found");
+                logger.Error("no project found");
                 return -1;
             }
 
             if (!File.Exists(project.GetPDFPath()))
             {
-                logger.LogError($"{project.GetPDFPath()} does not exists");
+                logger.Error($"{project.GetPDFPath()} does not exists");
                 return -1;
             }
 
@@ -31,7 +31,7 @@ namespace latextools
 
             await Task.Run(() =>
             {
-                logger.LogMessage($"{startInfo.FileName} {startInfo.Arguments}");
+                logger.Message($"{startInfo.FileName} {startInfo.Arguments}");
                 var process = System.Diagnostics.Process.Start(startInfo);
 
                 if (process == null)

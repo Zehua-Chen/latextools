@@ -16,7 +16,7 @@ namespace LaTeXTools.Build.Tasks
         {
             if (!System.IO.Directory.Exists(this.Directory))
             {
-                logger?.LogMessage($"create directory: {this.Directory}");
+                logger?.Message($"create directory: {this.Directory}");
                 System.IO.Directory.CreateDirectory(this.Directory);
             }
 

@@ -26,7 +26,7 @@ namespace latextools
             }
         }
 
-        public void LogMessage(string action)
+        public void Message(string action)
         {
             lock (this)
             {
@@ -37,7 +37,7 @@ namespace latextools
             }
         }
 
-        public void LogError(string error)
+        public void Error(string error)
         {
             lock (this)
             {
@@ -48,7 +48,7 @@ namespace latextools
             }
         }
 
-        public void LogStdOut(string invocation, string stdout)
+        public void StdOut(string invocation, string stdout)
         {
             if (stdout.Length == 0)
             {
@@ -66,7 +66,7 @@ namespace latextools
             }
         }
 
-        public void LogStdErr(string invocation, string stderr)
+        public void StdErr(string invocation, string stderr)
         {
             if (stderr.Length == 0)
             {
