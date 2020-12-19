@@ -46,6 +46,12 @@ Open the pdf file
 
 ## Development
 
+### Architecture
+
+- `src/LaTeXTools.Project`: manages project configuration
+- `src/LaTeXTools.Build`: build projects
+- `src/latextools`: the command line application
+
 ### Publish
 
 1. Go to `src/latextools`, and run
