@@ -25,5 +25,16 @@ namespace LaTeXTools.Project
                 Arguments = $"{bibPath}"
             };
         }
+
+        public static ProcessStartInfo GetGlossaryStartInfo(this LaTeXProject project)
+        {
+            string projectName = Path.GetFileNameWithoutExtension(project.Entry);
+
+            return new ProcessStartInfo()
+            {
+                FileName = "makeglossaries",
+                Arguments = $"-d {project.Bin} {projectName}"
+            };
+        }
     }
 }

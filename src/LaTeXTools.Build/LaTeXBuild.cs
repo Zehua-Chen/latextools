@@ -35,11 +35,19 @@ namespace LaTeXTools.Build
                 }
             };
 
-            if (this.Root.Bib != "none")
+            if (Root.Bib != "none")
             {
                 buildTasks.Add(new RunProcessTask()
                 {
-                    StartInfo = this.Root.GetBibStartInfo()
+                    StartInfo = Root.GetBibStartInfo()
+                });
+            }
+
+            if (Root.Glossary)
+            {
+                buildTasks.Add(new RunProcessTask()
+                {
+                    StartInfo = Root.GetGlossaryStartInfo()
                 });
             }
 

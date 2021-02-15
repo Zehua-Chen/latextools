@@ -36,6 +36,12 @@ namespace LaTeXTools.Project
         public string Bib { get; set; } = "none";
 
         /// <summary>
+        /// If to enable glossary for this project
+        /// </summary>
+        [JsonPropertyName("glossary")]
+        public bool Glossary { get; set; } = false;
+
+        /// <summary>
         /// Files/directories included by <c>Entry</c>
         /// </summary>
         [JsonPropertyName("includes")]
