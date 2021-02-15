@@ -50,6 +50,10 @@ latextools open
 
 Open the pdf file
 
+## Documentation
+
+- [Project](docs/Project.md)
+
 ## Development
 
 ### Architecture
