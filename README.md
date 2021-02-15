@@ -2,6 +2,12 @@
 
 Tools used with latex
 
+## Features
+
+- Automatically compile twice if `.aux` files changes
+- Automatically run bibliography programs
+- Automatically run glossary programs
+
 ## Get Started
 
 1. `latextools new --name project`
