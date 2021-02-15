@@ -17,6 +17,17 @@ namespace LaTeXTools.Project
         }
 
         /// <summary>
+        /// Get the path to <c>.gls</c> file of this project
+        /// </summary>
+        /// <param name="project"></param>
+        /// <returns></returns>
+        public static string GetGLSPath(this LaTeXProject project)
+        {
+            string document = Path.GetFileNameWithoutExtension(project.Entry);
+            return Path.Combine(project.Bin, string.Format("{0}.gls", document));
+        }
+
+        /// <summary>
         /// Get the path to <c>.pdf</c> file of this project
         /// </summary>
         /// <param name="project">the project in question</param>

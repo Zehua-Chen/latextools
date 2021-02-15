@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.IO;
 using LaTeXTools.Project;
@@ -21,10 +20,16 @@ namespace LaTeXTools.Build
             this.Root.Validate();
 
             string oldAUX = "";
+            string oldGLS = "";
 
             if (File.Exists(this.Root.GetAUXPath()))
             {
-                oldAUX = await File.ReadAllTextAsync(this.Root.GetAUXPath());
+                oldAUX = await File.ReadAllTextAsync(Root.GetAUXPath());
+            }
+
+            if (Root.Glossary && File.Exists(Root.GetGLSPath()))
+            {
+                oldGLS = await File.ReadAllTextAsync(Root.GetGLSPath());
             }
 
             var buildTasks = new List<BuildTask>()
@@ -56,7 +61,15 @@ namespace LaTeXTools.Build
                 Condition = async () =>
                 {
                     string newAUX = await File.ReadAllTextAsync(this.Root.GetAUXPath());
-                    return newAUX != oldAUX;
+
+                    if (!Root.Glossary)
+                    {
+                        return newAUX != oldAUX;
+                    }
+
+                    string newGLS = await File.ReadAllTextAsync(this.Root.GetGLSPath());
+
+                    return newAUX != oldAUX || oldGLS != newGLS;
                 },
                 StartInfo = this.Root.GetLaTeXStartInfo()
             });
