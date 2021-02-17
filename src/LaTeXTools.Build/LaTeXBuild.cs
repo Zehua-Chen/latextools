@@ -21,15 +21,24 @@ namespace LaTeXTools.Build
 
             string oldAUX = "";
             string oldGLS = "";
+            string oldGLSDefs = "";
 
             if (File.Exists(this.Root.GetAUXPath()))
             {
                 oldAUX = await File.ReadAllTextAsync(Root.GetAUXPath());
             }
 
-            if (Root.Glossary && File.Exists(Root.GetGLSPath()))
+            if (Root.Glossary)
             {
-                oldGLS = await File.ReadAllTextAsync(Root.GetGLSPath());
+                if (File.Exists(Root.GetGLSPath()))
+                {
+                    oldGLS = await File.ReadAllTextAsync(Root.GetGLSPath());
+                }
+
+                if (File.Exists(Root.GetGLSDefsPath()))
+                {
+                    oldGLSDefs = await File.ReadAllTextAsync(Root.GetGLSDefsPath());
+                }
             }
 
             var buildTasks = new List<BuildTask>()
@@ -68,8 +77,9 @@ namespace LaTeXTools.Build
                     }
 
                     string newGLS = await File.ReadAllTextAsync(this.Root.GetGLSPath());
+                    string newGLSDefs = await File.ReadAllTextAsync(this.Root.GetGLSDefsPath());
 
-                    return newAUX != oldAUX || oldGLS != newGLS;
+                    return newAUX != oldAUX || oldGLS != newGLS || oldGLSDefs != newGLSDefs;
                 },
                 StartInfo = this.Root.GetLaTeXStartInfo()
             });
