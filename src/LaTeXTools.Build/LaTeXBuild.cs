@@ -19,28 +19,6 @@ namespace LaTeXTools.Build
         {
             this.Root.Validate();
 
-            string oldAUX = "";
-            string oldGLS = "";
-            string oldGLSDefs = "";
-
-            if (File.Exists(this.Root.GetAUXPath()))
-            {
-                oldAUX = await File.ReadAllTextAsync(Root.GetAUXPath());
-            }
-
-            if (Root.Glossary)
-            {
-                if (File.Exists(Root.GetGLSPath()))
-                {
-                    oldGLS = await File.ReadAllTextAsync(Root.GetGLSPath());
-                }
-
-                if (File.Exists(Root.GetGLSDefsPath()))
-                {
-                    oldGLSDefs = await File.ReadAllTextAsync(Root.GetGLSDefsPath());
-                }
-            }
-
             var buildTasks = new List<BuildTask>()
             {
                 new RunProcessTask()
@@ -65,23 +43,13 @@ namespace LaTeXTools.Build
                 });
             }
 
-            buildTasks.Add(new ConditionalRunProcessTask()
+            buildTasks.Add(new FileContentComparisonsTask()
             {
-                Condition = async () =>
+                Task = new RunProcessTask()
                 {
-                    string newAUX = await File.ReadAllTextAsync(this.Root.GetAUXPath());
-
-                    if (!Root.Glossary)
-                    {
-                        return newAUX != oldAUX;
-                    }
-
-                    string newGLS = await File.ReadAllTextAsync(this.Root.GetGLSPath());
-                    string newGLSDefs = await File.ReadAllTextAsync(this.Root.GetGLSDefsPath());
-
-                    return newAUX != oldAUX || oldGLS != newGLS || oldGLSDefs != newGLSDefs;
+                    StartInfo = this.Root.GetLaTeXStartInfo()
                 },
-                StartInfo = this.Root.GetLaTeXStartInfo()
+                FileContentComparisons = await GetFileContentComparisonsAsync(),
             });
 
             var task = new ProjectTask()
@@ -120,6 +88,22 @@ namespace LaTeXTools.Build
 
                 yield return item;
             }
+        }
+
+        private async ValueTask<IEnumerable<FileContentComparison?>> GetFileContentComparisonsAsync()
+        {
+            var comparison = new List<FileContentComparison>()
+            {
+                await FileContentComparison.OpenAsync(this.Root.GetAUXPath())
+            };
+
+            if (this.Root.Glossary)
+            {
+                comparison.Add(await FileContentComparison.OpenAsync(this.Root.GetGLSPath()));
+                comparison.Add(await FileContentComparison.OpenAsync(this.Root.GetGLSDefsPath()));
+            }
+
+            return comparison.ToArray();
         }
     }
 }
