@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\LaTeXTools.Project\LaTexTools.Project.csproj" />
+    <ProjectReference Include="..\..\src\LaTeXTools.Project\LaTeXTools.Project.csproj" />
   </ItemGroup>
 
 </Project>
