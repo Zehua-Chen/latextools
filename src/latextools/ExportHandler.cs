@@ -5,6 +5,7 @@ using LaTeXTools.Project;
 using LaTeXTools.Build;
 using LaTeXTools.Build.Tasks;
 using LaTeXTools.Build.Generators;
+using LaTeXTools.Build.IO;
 
 namespace latextools
 {
@@ -22,9 +23,11 @@ namespace latextools
             }
 
             var build = new LaTeXBuild(project);
+            var fileSystem = new FileSystem();
+
             string makePath = Path.Combine(project.WorkingDirectory, "Makefile");
 
-            ProjectTask task = await build.GetBuildTaskAsync();
+            ProjectTask task = await build.GetBuildTaskAsync(fileSystem);
 
             using StreamWriter writer = File.CreateText("Makefile");
             await writer.WriteMakefileAsync(task.GetMakefile());

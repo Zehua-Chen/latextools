@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.IO;
 using LaTeXTools.Project;
 using LaTeXTools.Build.Tasks;
+using LaTeXTools.Build.IO;
 
 namespace LaTeXTools.Build
 {
@@ -15,7 +15,7 @@ namespace LaTeXTools.Build
             this.Root = root;
         }
 
-        public async ValueTask<ProjectTask> GetBuildTaskAsync()
+        public async ValueTask<ProjectTask> GetBuildTaskAsync(IFileSystem fileSystem)
         {
             this.Root.Validate();
 
@@ -56,14 +56,14 @@ namespace LaTeXTools.Build
             {
                 OutputPDFPath = this.Root.GetPDFPath(),
                 OutputDirectory = this.Root.Bin,
-                DependencyPaths = this.GetIncludes(),
+                DependencyPaths = this.GetIncludes(fileSystem),
                 BuildTasks = buildTasks
             };
 
             return task;
         }
 
-        private IEnumerable<string> GetIncludes()
+        private IEnumerable<string> GetIncludes(IFileSystem fileSystem)
         {
             var toVisit = new Queue<string>();
 
@@ -76,9 +76,9 @@ namespace LaTeXTools.Build
             {
                 string item = toVisit.Dequeue();
 
-                if (Directory.Exists(item))
+                if (fileSystem.DirectoryExists(item))
                 {
-                    foreach (var child in Directory.EnumerateFileSystemEntries(item))
+                    foreach (var child in fileSystem.EnumerateFileSystemEntries(item))
                     {
                         toVisit.Enqueue(child);
                     }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace LaTeXTools.Build.IO
@@ -13,6 +14,11 @@ namespace LaTeXTools.Build.IO
         public bool DirectoryExists(string path)
         {
             return Directory.Exists(path);
+        }
+
+        public IEnumerable<string> EnumerateFileSystemEntries(string path)
+        {
+            return Directory.EnumerateFileSystemEntries(path);
         }
 
         public bool FileExists(string path)

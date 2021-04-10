@@ -28,9 +28,11 @@ namespace latextools
             }
 
             var build = new LaTeXBuild(project);
-            ProjectTask task = await build.GetBuildTaskAsync();
+            var fileSystem = new FileSystem();
 
-            var buildContext = new BuildContext(new FileSystem(), logger);
+            ProjectTask task = await build.GetBuildTaskAsync(fileSystem);
+
+            var buildContext = new BuildContext(fileSystem, logger);
 
             try
             {
