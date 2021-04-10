@@ -1,7 +1,7 @@
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
-using LaTeXTools.Build.Log;
+using LaTeXTools.Build.IO;
 
 namespace LaTeXTools.Build.Tasks
 {
@@ -23,12 +23,14 @@ namespace LaTeXTools.Build.Tasks
         /// <returns></returns>
         public async ValueTask RunAsync(BuildContext context)
         {
-            if (!Directory.Exists(this.OutputDirectory))
+            IFileSystem fileSystem = context.FileSystem;
+
+            if (!fileSystem.DirectoryExists(this.OutputDirectory))
             {
-                Directory.CreateDirectory(this.OutputDirectory);
+                fileSystem.CreateDirectory(this.OutputDirectory);
             }
 
-            if (!this.ShouldRun())
+            if (!this.ShouldRun(fileSystem))
             {
                 context.Logger.Message("no build needed");
                 return;
@@ -47,9 +49,9 @@ namespace LaTeXTools.Build.Tasks
             }
         }
 
-        private bool ShouldRun()
+        private bool ShouldRun(IFileSystem fileSystem)
         {
-            if (!File.Exists(this.OutputPDFPath))
+            if (!fileSystem.FileExists(this.OutputPDFPath))
             {
                 return true;
             }
@@ -59,15 +61,13 @@ namespace LaTeXTools.Build.Tasks
                 return false;
             }
 
-            var pdfWriteTime = (new FileInfo(this.OutputPDFPath)).LastWriteTimeUtc;
+            DateTime pdfWriteTime = fileSystem.GetFileLastWriteTimeUtc(this.OutputPDFPath);
 
-            foreach (var file in this.DependencyPaths)
+            foreach (var dependency in this.DependencyPaths)
             {
-                if (File.Exists(file))
+                if (fileSystem.FileExists(dependency))
                 {
-                    var info = new FileInfo(file);
-
-                    if (info.LastWriteTimeUtc > pdfWriteTime)
+                    if (fileSystem.GetFileLastWriteTimeUtc(dependency) > pdfWriteTime)
                     {
                         return true;
                     }

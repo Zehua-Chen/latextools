@@ -19,7 +19,7 @@ namespace LaTeXTools.Build.Tasks
             if (!System.IO.Directory.Exists(this.Directory))
             {
                 logger.Message($"create directory: {this.Directory}");
-                System.IO.Directory.CreateDirectory(this.Directory);
+                context.FileSystem.CreateDirectory(this.Directory);
             }
 
             return new ValueTask();
