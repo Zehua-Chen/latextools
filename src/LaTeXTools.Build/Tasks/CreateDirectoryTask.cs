@@ -12,11 +12,13 @@ namespace LaTeXTools.Build.Tasks
             this.Directory = directory;
         }
 
-        public override ValueTask RunAsync(ILogger? logger)
+        public override ValueTask RunAsync(BuildContext context)
         {
+            ILogger logger = context.Logger;
+
             if (!System.IO.Directory.Exists(this.Directory))
             {
-                logger?.Message($"create directory: {this.Directory}");
+                logger.Message($"create directory: {this.Directory}");
                 System.IO.Directory.CreateDirectory(this.Directory);
             }
 

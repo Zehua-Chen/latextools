@@ -40,7 +40,7 @@ namespace LaTeXTools.Build.Tasks
         /// </summary>
         /// <param name="logger"></param>
         /// <returns></returns>
-        public override async ValueTask RunAsync(ILogger? logger)
+        public override async ValueTask RunAsync(BuildContext context)
         {
             if (FileContentComparisons == null)
             {
@@ -60,7 +60,7 @@ namespace LaTeXTools.Build.Tasks
                 // there is a content mismatch
                 if (!comparison)
                 {
-                    await Task.RunAsync(logger);
+                    await Task.RunAsync(context);
 
                     break;
                 }

@@ -21,7 +21,7 @@ namespace LaTeXTools.Build.Tasks
         /// Thrown when the build needs to be aborted
         /// </exception>
         /// <returns></returns>
-        public async ValueTask RunAsync(ILogger? logger = null)
+        public async ValueTask RunAsync(BuildContext context)
         {
             if (!Directory.Exists(this.OutputDirectory))
             {
@@ -30,11 +30,11 @@ namespace LaTeXTools.Build.Tasks
 
             if (!this.ShouldRun())
             {
-                logger?.Message("no build needed");
+                context.Logger.Message("no build needed");
                 return;
             }
 
-            await this.RunSubProjects(logger);
+            await this.RunSubProjects(context);
 
             if (this.BuildTasks == null)
             {
@@ -43,7 +43,7 @@ namespace LaTeXTools.Build.Tasks
 
             foreach (var buildTask in this.BuildTasks)
             {
-                await buildTask.RunAsync(logger);
+                await buildTask.RunAsync(context);
             }
         }
 
@@ -77,7 +77,7 @@ namespace LaTeXTools.Build.Tasks
             return false;
         }
 
-        private async ValueTask RunSubProjects(ILogger? logger)
+        private async ValueTask RunSubProjects(BuildContext context)
         {
             if (this.SubProjects == null)
             {
@@ -88,7 +88,7 @@ namespace LaTeXTools.Build.Tasks
 
             foreach (var subproject in this.SubProjects)
             {
-                tasks.Add(subproject.RunAsync(logger).AsTask());
+                tasks.Add(subproject.RunAsync(context).AsTask());
             }
 
             await Task.WhenAll(tasks.ToArray());

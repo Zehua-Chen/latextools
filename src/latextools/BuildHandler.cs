@@ -5,6 +5,7 @@ using System.CommandLine.Invocation;
 using LaTeXTools.Project;
 using LaTeXTools.Build;
 using LaTeXTools.Build.Tasks;
+using LaTeXTools.Build.IO;
 
 namespace latextools
 {
@@ -29,10 +30,12 @@ namespace latextools
             var build = new LaTeXBuild(project);
             ProjectTask task = await build.GetBuildTaskAsync();
 
+            var buildContext = new BuildContext(new FileSystem(), logger);
+
             try
             {
                 logger.Message($"working directory: {Environment.CurrentDirectory}");
-                await task.RunAsync(logger);
+                await task.RunAsync(buildContext);
             }
             catch (AbortException abortException)
             {
