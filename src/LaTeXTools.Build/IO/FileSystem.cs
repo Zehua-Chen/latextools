@@ -4,14 +4,14 @@ using System.IO;
 
 namespace LaTeXTools.Build.IO
 {
-    public sealed class FileSystem : IFileSystem
+    public sealed class DirectoryOperations : IDirectoryOperations
     {
-        public void CreateDirectory(string path)
+        public void Create(string path)
         {
             Directory.CreateDirectory(path);
         }
 
-        public bool DirectoryExists(string path)
+        public bool Exists(string path)
         {
             return Directory.Exists(path);
         }
@@ -20,13 +20,16 @@ namespace LaTeXTools.Build.IO
         {
             return Directory.EnumerateFileSystemEntries(path);
         }
+    }
 
-        public bool FileExists(string path)
+    public class FileOperations : IFileOperations
+    {
+        public bool Exists(string path)
         {
             return File.Exists(path);
         }
 
-        public DateTime GetFileLastWriteTimeUtc(string path)
+        public DateTime GetLastWriteTimeUtc(string path)
         {
             return new FileInfo(path).LastWriteTimeUtc;
         }
@@ -35,5 +38,11 @@ namespace LaTeXTools.Build.IO
         {
             return File.Open(path, fileMode);
         }
+    }
+
+    public sealed class FileSystem : IFileSystem
+    {
+        public IDirectoryOperations Directory { get; init; } = new DirectoryOperations();
+        public IFileOperations File { get; init; } = new FileOperations();
     }
 }

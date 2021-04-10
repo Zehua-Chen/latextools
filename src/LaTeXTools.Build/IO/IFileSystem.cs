@@ -4,14 +4,23 @@ using System.IO;
 
 namespace LaTeXTools.Build.IO
 {
+    public interface IDirectoryOperations
+    {
+        void Create(string path);
+        bool Exists(string path);
+        IEnumerable<string> EnumerateFileSystemEntries(string path);
+    }
+
+    public interface IFileOperations
+    {
+        bool Exists(string path);
+        DateTime GetLastWriteTimeUtc(string path);
+        Stream Open(string path, FileMode fileMode);
+    }
+
     public interface IFileSystem
     {
-        void CreateDirectory(string path);
-        bool DirectoryExists(string path);
-        IEnumerable<string> EnumerateFileSystemEntries(string path);
-
-        bool FileExists(string path);
-        DateTime GetFileLastWriteTimeUtc(string path);
-        Stream Open(string path, FileMode fileMode);
+        IDirectoryOperations Directory { get; }
+        IFileOperations File { get; }
     }
 }

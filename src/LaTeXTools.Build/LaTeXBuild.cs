@@ -66,6 +66,7 @@ namespace LaTeXTools.Build
         private IEnumerable<string> GetIncludes(IFileSystem fileSystem)
         {
             var toVisit = new Queue<string>();
+            IDirectoryOperations directory = fileSystem.Directory;
 
             foreach (var include in this.Root.GetDependencyPaths())
             {
@@ -76,9 +77,9 @@ namespace LaTeXTools.Build
             {
                 string item = toVisit.Dequeue();
 
-                if (fileSystem.DirectoryExists(item))
+                if (directory.Exists(item))
                 {
-                    foreach (var child in fileSystem.EnumerateFileSystemEntries(item))
+                    foreach (var child in directory.EnumerateFileSystemEntries(item))
                     {
                         toVisit.Enqueue(child);
                     }

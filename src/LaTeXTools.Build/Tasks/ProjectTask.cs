@@ -24,10 +24,11 @@ namespace LaTeXTools.Build.Tasks
         public async ValueTask RunAsync(BuildContext context)
         {
             IFileSystem fileSystem = context.FileSystem;
+            IDirectoryOperations directory = fileSystem.Directory;
 
-            if (!fileSystem.DirectoryExists(this.OutputDirectory))
+            if (!directory.Exists(this.OutputDirectory))
             {
-                fileSystem.CreateDirectory(this.OutputDirectory);
+                directory.Create(this.OutputDirectory);
             }
 
             if (!this.ShouldRun(fileSystem))
@@ -51,7 +52,9 @@ namespace LaTeXTools.Build.Tasks
 
         private bool ShouldRun(IFileSystem fileSystem)
         {
-            if (!fileSystem.FileExists(this.OutputPDFPath))
+            IFileOperations file = fileSystem.File;
+
+            if (!file.Exists(this.OutputPDFPath))
             {
                 return true;
             }
@@ -61,13 +64,13 @@ namespace LaTeXTools.Build.Tasks
                 return false;
             }
 
-            DateTime pdfWriteTime = fileSystem.GetFileLastWriteTimeUtc(this.OutputPDFPath);
+            DateTime pdfWriteTime = file.GetLastWriteTimeUtc(this.OutputPDFPath);
 
             foreach (var dependency in this.DependencyPaths)
             {
-                if (fileSystem.FileExists(dependency))
+                if (file.Exists(dependency))
                 {
-                    if (fileSystem.GetFileLastWriteTimeUtc(dependency) > pdfWriteTime)
+                    if (file.GetLastWriteTimeUtc(dependency) > pdfWriteTime)
                     {
                         return true;
                     }
