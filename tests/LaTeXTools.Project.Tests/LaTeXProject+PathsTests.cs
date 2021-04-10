@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Xunit;
 using LaTeXTools.Project;
 
@@ -15,7 +16,7 @@ namespace LaTeXTools.Project.Tests
                 Entry = "index.tex"
             };
 
-            Assert.Equal("bin/index.log", project.GetLogPath());
+            Assert.Equal(Path.Join("bin", "index.log"), project.GetLogPath());
         }
     }
 }
