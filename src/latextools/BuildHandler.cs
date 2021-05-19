@@ -1,11 +1,11 @@
 using System;
 using System.IO;
+using System.IO.Abstractions;
 using System.Threading.Tasks;
 using System.CommandLine.Invocation;
 using LaTeXTools.Project;
 using LaTeXTools.Build;
 using LaTeXTools.Build.Tasks;
-using LaTeXTools.Build.IO;
 
 namespace latextools
 {
