@@ -2,4 +2,8 @@
   <PropertyGroup>
     <Version>0.6.0</Version>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.IO.Abstractions" Version="13.2.33" />
+  </ItemGroup>
 </Project>

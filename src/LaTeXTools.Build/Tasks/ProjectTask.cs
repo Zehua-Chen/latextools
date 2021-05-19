@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using LaTeXTools.Build.IO;
+using System.IO.Abstractions;
 
 namespace LaTeXTools.Build.Tasks
 {
@@ -24,11 +24,11 @@ namespace LaTeXTools.Build.Tasks
         public async ValueTask RunAsync(BuildContext context)
         {
             IFileSystem fileSystem = context.FileSystem;
-            IDirectoryOperations directory = fileSystem.Directory;
+            IDirectory directory = fileSystem.Directory;
 
             if (!directory.Exists(this.OutputDirectory))
             {
-                directory.Create(this.OutputDirectory);
+                directory.CreateDirectory(this.OutputDirectory);
             }
 
             if (!this.ShouldRun(fileSystem))
@@ -52,7 +52,7 @@ namespace LaTeXTools.Build.Tasks
 
         private bool ShouldRun(IFileSystem fileSystem)
         {
-            IFileOperations file = fileSystem.File;
+            IFile file = fileSystem.File;
 
             if (!file.Exists(this.OutputPDFPath))
             {

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.IO.Abstractions;
 using LaTeXTools.Project;
 using LaTeXTools.Build.Tasks;
-using LaTeXTools.Build.IO;
 
 namespace LaTeXTools.Build
 {
@@ -66,7 +66,7 @@ namespace LaTeXTools.Build
         private IEnumerable<string> GetIncludes(IFileSystem fileSystem)
         {
             var toVisit = new Queue<string>();
-            IDirectoryOperations directory = fileSystem.Directory;
+            IDirectory directory = fileSystem.Directory;
 
             foreach (var include in this.Root.GetDependencyPaths())
             {

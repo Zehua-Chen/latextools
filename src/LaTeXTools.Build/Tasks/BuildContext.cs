@@ -1,4 +1,4 @@
-using LaTeXTools.Build.IO;
+using System.IO.Abstractions;
 using LaTeXTools.Build.Log;
 
 namespace LaTeXTools.Build.Tasks
