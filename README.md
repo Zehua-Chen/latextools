@@ -2,6 +2,8 @@
 
 Tools used with latex
 
+![Test](https://github.com/Zehua-Chen/latextools/actions/workflows/test.yml/badge.svg)
+
 ## Features
 
 - Automatically compile twice if `.aux` files changes
@@ -20,35 +22,26 @@ Tools used with latex
 
 ## Commands
 
-```
-latextools new -n <folder>
-```
-
-Create a new project
-
-```
-latextools build
-```
-
-Build the project and then rebuild it if needed
-
-```
-latextools clean
-```
-
-Clean the build folder
-
-```
-latextools generate
-```
-
-Generate a Makefile for this project
-
-```
-latextools open
-```
-
-Open the pdf file
+- Create a new project
+  ```
+  latextools new -n <folder>
+  ```
+- Build the project and then rebuild it if needed
+  ```
+  latextools build
+  ```
+- Clean the build folder
+  ```
+  latextools clean
+  ```
+- Generate a Makefile for this project
+  ```
+  latextools generate
+  ```
+- Open the pdf file
+  ```
+  latextools open
+  ```
 
 ## Documentation
 
