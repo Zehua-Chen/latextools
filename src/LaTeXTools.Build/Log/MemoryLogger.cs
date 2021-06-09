@@ -4,13 +4,11 @@ namespace LaTeXTools.Build.Log
 {
     public class MemoryLogger : ILogger
     {
-
-
         public List<string> Errors { get; private set; } = new List<string>();
         public List<string> Files { get; private set; } = new List<string>();
         public List<string> Messages { get; private set; } = new List<string>();
-        public List<string> ProcessStdOuts { get; private set; } = new List<string>();
-        public List<string> ProcessStdErrs { get; private set; } = new List<string>();
+        public List<ProcessOutput> ProcessStdOuts { get; private set; } = new List<ProcessOutput>();
+        public List<ProcessOutput> ProcessStdErrs { get; private set; } = new List<ProcessOutput>();
 
         public void LogError(string error)
         {
@@ -29,12 +27,12 @@ namespace LaTeXTools.Build.Log
 
         public void LogProcessStdErr(in ProcessOutput stderr)
         {
-            throw new System.NotImplementedException();
+            ProcessStdErrs.Add(stderr);
         }
 
         public void LogProcessStdOut(in ProcessOutput stdout)
         {
-            throw new System.NotImplementedException();
+            ProcessStdOuts.Add(stdout);
         }
     }
 }
