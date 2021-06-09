@@ -1,8 +1,7 @@
 using System.Collections.Generic;
-using LaTeXTools.Build.Tasks;
 using Xunit;
 
-namespace LaTeXTools.Build.Tests.Tasks
+namespace LaTeXTools.Build.Tasks.Tests
 {
     public class FileContentComparisonTests
     {

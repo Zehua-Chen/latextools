@@ -18,7 +18,7 @@ namespace latextools
 
             if (project == null)
             {
-                logger.Error("no project found");
+                logger.LogError("no project found");
                 return -1;
             }
 
@@ -36,13 +36,13 @@ namespace latextools
 
             try
             {
-                logger.Message($"working directory: {Environment.CurrentDirectory}");
+                logger.Log($"working directory: {Environment.CurrentDirectory}");
                 await task.RunAsync(buildContext);
             }
             catch (AbortException abortException)
             {
-                logger.Error($"process exited with code {abortException.ExitCode}");
-                logger.Log(File.ReadAllText(project.GetLogPath()));
+                logger.LogError($"process exited with code {abortException.ExitCode}");
+                logger.LogFile(File.ReadAllText(project.GetLogPath()));
             }
             catch (Exception e)
             {

@@ -26,7 +26,7 @@ namespace LaTeXTools.Build.Tasks
 
                 string action = $"{StartInfo.FileName} {StartInfo.Arguments}";
 
-                logger.Message(action);
+                logger.Log(action);
 
                 StartInfo.RedirectStandardError = true;
                 StartInfo.RedirectStandardOutput = true;
@@ -40,8 +40,8 @@ namespace LaTeXTools.Build.Tasks
 
                 process.WaitForExit();
 
-                logger.StdOut(action, await process.StandardOutput.ReadToEndAsync());
-                logger.StdErr(action, await process.StandardError.ReadToEndAsync());
+                logger.LogProcessStdOut(action, await process.StandardOutput.ReadToEndAsync());
+                logger.LogProcessStdErr(action, await process.StandardError.ReadToEndAsync());
 
                 if (process.ExitCode != 0)
                 {

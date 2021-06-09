@@ -26,7 +26,7 @@ namespace latextools
             }
         }
 
-        public void Message(string action)
+        public void Log(string action)
         {
             lock (this)
             {
@@ -37,7 +37,7 @@ namespace latextools
             }
         }
 
-        public void Error(string error)
+        public void LogError(string error)
         {
             lock (this)
             {
@@ -48,7 +48,7 @@ namespace latextools
             }
         }
 
-        public void Log(string log)
+        public void LogFile(string log)
         {
             using ConsoleColorGuard guard = ConsoleColorGuard.Current;
 
@@ -56,7 +56,7 @@ namespace latextools
             Console.WriteLine($"{log}");
         }
 
-        public void StdOut(string invocation, string stdout)
+        public void LogProcessStdOut(string invocation, string stdout)
         {
             if (stdout.Length == 0)
             {
@@ -74,7 +74,7 @@ namespace latextools
             }
         }
 
-        public void StdErr(string invocation, string stderr)
+        public void LogProcessStdErr(string invocation, string stderr)
         {
             if (stderr.Length == 0)
             {
