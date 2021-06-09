@@ -36,7 +36,12 @@ namespace LaTeXTools.Build.Log
         /// </summary>
         /// <param name="invocation">the process's invocation</param>
         /// <param name="stdout">the stdout</param>
-        void LogProcessStdOut(string invocation, string stdout);
+        void LogProcessStdOut(string invocation, string stdout)
+        {
+            this.LogProcessStdOut(new ProcessOutput { Invocation = invocation, Message = stdout });
+        }
+
+        void LogProcessStdOut(in ProcessOutput output);
 
         /// <summary>
         /// Called to output the stderr of a subprocess
@@ -45,6 +50,11 @@ namespace LaTeXTools.Build.Log
         /// </summary>
         /// <param name="invocation">the subprocess's invocation</param>
         /// <param name="stderr">the stderr</param>
-        void LogProcessStdErr(string invocation, string stderr);
+        void LogProcessStdErr(string invocation, string stderr)
+        {
+            this.LogProcessStdOut(new ProcessOutput { Invocation = invocation, Message = stderr });
+        }
+
+        void LogProcessStdErr(in ProcessOutput output);
     }
 }
