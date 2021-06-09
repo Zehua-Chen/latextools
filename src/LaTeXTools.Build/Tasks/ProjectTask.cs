@@ -1,7 +1,7 @@
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
-using LaTeXTools.Build.Log;
+using System.IO.Abstractions;
 
 namespace LaTeXTools.Build.Tasks
 {
@@ -21,20 +21,23 @@ namespace LaTeXTools.Build.Tasks
         /// Thrown when the build needs to be aborted
         /// </exception>
         /// <returns></returns>
-        public async ValueTask RunAsync(ILogger? logger = null)
+        public async ValueTask RunAsync(BuildContext context)
         {
-            if (!Directory.Exists(this.OutputDirectory))
+            IFileSystem fileSystem = context.FileSystem;
+            IDirectory directory = fileSystem.Directory;
+
+            if (!directory.Exists(this.OutputDirectory))
             {
-                Directory.CreateDirectory(this.OutputDirectory);
+                directory.CreateDirectory(this.OutputDirectory);
             }
 
-            if (!this.ShouldRun())
+            if (!this.ShouldRun(fileSystem))
             {
-                logger?.Message("no build needed");
+                context.Logger.Log("no build needed");
                 return;
             }
 
-            await this.RunSubProjects(logger);
+            await this.RunSubProjects(context);
 
             if (this.BuildTasks == null)
             {
@@ -43,13 +46,15 @@ namespace LaTeXTools.Build.Tasks
 
             foreach (var buildTask in this.BuildTasks)
             {
-                await buildTask.RunAsync(logger);
+                await buildTask.RunAsync(context);
             }
         }
 
-        private bool ShouldRun()
+        private bool ShouldRun(IFileSystem fileSystem)
         {
-            if (!File.Exists(this.OutputPDFPath))
+            IFile file = fileSystem.File;
+
+            if (!file.Exists(this.OutputPDFPath))
             {
                 return true;
             }
@@ -59,15 +64,13 @@ namespace LaTeXTools.Build.Tasks
                 return false;
             }
 
-            var pdfWriteTime = (new FileInfo(this.OutputPDFPath)).LastWriteTimeUtc;
+            DateTime pdfWriteTime = file.GetLastWriteTimeUtc(this.OutputPDFPath);
 
-            foreach (var file in this.DependencyPaths)
+            foreach (var dependency in this.DependencyPaths)
             {
-                if (File.Exists(file))
+                if (file.Exists(dependency))
                 {
-                    var info = new FileInfo(file);
-
-                    if (info.LastWriteTimeUtc > pdfWriteTime)
+                    if (file.GetLastWriteTimeUtc(dependency) > pdfWriteTime)
                     {
                         return true;
                     }
@@ -77,7 +80,7 @@ namespace LaTeXTools.Build.Tasks
             return false;
         }
 
-        private async ValueTask RunSubProjects(ILogger? logger)
+        private async ValueTask RunSubProjects(BuildContext context)
         {
             if (this.SubProjects == null)
             {
@@ -88,7 +91,7 @@ namespace LaTeXTools.Build.Tasks
 
             foreach (var subproject in this.SubProjects)
             {
-                tasks.Add(subproject.RunAsync(logger).AsTask());
+                tasks.Add(subproject.RunAsync(context).AsTask());
             }
 
             await Task.WhenAll(tasks.ToArray());

@@ -13,7 +13,7 @@ namespace LaTeXTools.Build.Tasks
         /// <value></value>
         public ProcessStartInfo? StartInfo { get; set; } = null;
 
-        public override async ValueTask RunAsync(ILogger? logger)
+        public override async ValueTask RunAsync(BuildContext context)
         {
             if (this.StartInfo == null)
             {
@@ -22,9 +22,11 @@ namespace LaTeXTools.Build.Tasks
 
             await Task.Run(async () =>
             {
+                ILogger logger = context.Logger;
+
                 string action = $"{StartInfo.FileName} {StartInfo.Arguments}";
 
-                logger?.Message(action);
+                logger.Log(action);
 
                 StartInfo.RedirectStandardError = true;
                 StartInfo.RedirectStandardOutput = true;
@@ -38,8 +40,8 @@ namespace LaTeXTools.Build.Tasks
 
                 process.WaitForExit();
 
-                logger?.StdOut(action, await process.StandardOutput.ReadToEndAsync());
-                logger?.StdErr(action, await process.StandardError.ReadToEndAsync());
+                logger.LogProcessStdOut(action, await process.StandardOutput.ReadToEndAsync());
+                logger.LogProcessStdErr(action, await process.StandardError.ReadToEndAsync());
 
                 if (process.ExitCode != 0)
                 {

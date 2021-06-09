@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.IO.Abstractions;
 using System.Threading.Tasks;
 using System.CommandLine.Invocation;
 using LaTeXTools.Project;
@@ -17,7 +18,7 @@ namespace latextools
 
             if (project == null)
             {
-                logger.Error("no project found");
+                logger.LogError("no project found");
                 return -1;
             }
 
@@ -27,17 +28,21 @@ namespace latextools
             }
 
             var build = new LaTeXBuild(project);
-            ProjectTask task = await build.GetBuildTaskAsync();
+            var fileSystem = new FileSystem();
+
+            ProjectTask task = await build.GetBuildTaskAsync(fileSystem);
+
+            var buildContext = new BuildContext(fileSystem, logger);
 
             try
             {
-                logger.Message($"working directory: {Environment.CurrentDirectory}");
-                await task.RunAsync(logger);
+                logger.Log($"working directory: {Environment.CurrentDirectory}");
+                await task.RunAsync(buildContext);
             }
             catch (AbortException abortException)
             {
-                logger.Error($"process exited with code {abortException.ExitCode}");
-                logger.Log(File.ReadAllText(project.GetLogPath()));
+                logger.LogError($"process exited with code {abortException.ExitCode}");
+                logger.LogFile(File.ReadAllText(project.GetLogPath()));
             }
             catch (Exception e)
             {

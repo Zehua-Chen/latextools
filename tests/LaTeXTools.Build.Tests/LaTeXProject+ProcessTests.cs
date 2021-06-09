@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Xunit;
 using LaTeXTools.Project;
 
-namespace LaTeXTools.Build.Tests.Generators
+namespace LaTeXTools.Build.Tests
 {
     public class LaTeXProjectProcessExtensionsTests
     {

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\LaTexTools.Project\LaTexTools.Project.csproj" />
+    <ProjectReference Include="..\LaTeXTools.Project\LaTeXTools.Project.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

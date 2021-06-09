@@ -26,7 +26,7 @@ namespace latextools
             }
         }
 
-        public void Message(string action)
+        public void Log(string action)
         {
             lock (this)
             {
@@ -37,7 +37,7 @@ namespace latextools
             }
         }
 
-        public void Error(string error)
+        public void LogError(string error)
         {
             lock (this)
             {
@@ -48,7 +48,7 @@ namespace latextools
             }
         }
 
-        public void Log(string log)
+        public void LogFile(string log)
         {
             using ConsoleColorGuard guard = ConsoleColorGuard.Current;
 
@@ -56,9 +56,9 @@ namespace latextools
             Console.WriteLine($"{log}");
         }
 
-        public void StdOut(string invocation, string stdout)
+        public void LogProcessStdOut(in ProcessOutput stdout)
         {
-            if (stdout.Length == 0)
+            if (stdout.Message.Length == 0)
             {
                 return;
             }
@@ -66,17 +66,17 @@ namespace latextools
             lock (this)
             {
                 // using ConsoleColorGuard guard = ConsoleColorGuard.Current;
-                Console.WriteLine(invocation);
+                Console.WriteLine(stdout.Invocation);
                 Console.WriteLine();
 
-                Console.WriteLine(stdout);
+                Console.WriteLine(stdout.Message);
                 Console.WriteLine();
             }
         }
 
-        public void StdErr(string invocation, string stderr)
+        public void LogProcessStdErr(in ProcessOutput stderr)
         {
-            if (stderr.Length == 0)
+            if (stderr.Message.Length == 0)
             {
                 return;
             }
@@ -86,10 +86,10 @@ namespace latextools
                 using ConsoleColorGuard guard = ConsoleColorGuard.Current;
 
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(invocation);
+                Console.WriteLine(stderr.Invocation);
                 Console.WriteLine();
 
-                Console.WriteLine(stderr);
+                Console.WriteLine(stderr.Message);
                 Console.WriteLine();
             }
         }

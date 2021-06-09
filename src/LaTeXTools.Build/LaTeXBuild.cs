@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.IO;
+using System.IO.Abstractions;
 using LaTeXTools.Project;
 using LaTeXTools.Build.Tasks;
 
@@ -15,31 +15,9 @@ namespace LaTeXTools.Build
             this.Root = root;
         }
 
-        public async ValueTask<ProjectTask> GetBuildTaskAsync()
+        public async ValueTask<ProjectTask> GetBuildTaskAsync(IFileSystem fileSystem)
         {
             this.Root.Validate();
-
-            string oldAUX = "";
-            string oldGLS = "";
-            string oldGLSDefs = "";
-
-            if (File.Exists(this.Root.GetAUXPath()))
-            {
-                oldAUX = await File.ReadAllTextAsync(Root.GetAUXPath());
-            }
-
-            if (Root.Glossary)
-            {
-                if (File.Exists(Root.GetGLSPath()))
-                {
-                    oldGLS = await File.ReadAllTextAsync(Root.GetGLSPath());
-                }
-
-                if (File.Exists(Root.GetGLSDefsPath()))
-                {
-                    oldGLSDefs = await File.ReadAllTextAsync(Root.GetGLSDefsPath());
-                }
-            }
 
             var buildTasks = new List<BuildTask>()
             {
@@ -65,39 +43,30 @@ namespace LaTeXTools.Build
                 });
             }
 
-            buildTasks.Add(new ConditionalRunProcessTask()
+            buildTasks.Add(new FileContentComparisonsTask()
             {
-                Condition = async () =>
+                Task = new RunProcessTask()
                 {
-                    string newAUX = await File.ReadAllTextAsync(this.Root.GetAUXPath());
-
-                    if (!Root.Glossary)
-                    {
-                        return newAUX != oldAUX;
-                    }
-
-                    string newGLS = await File.ReadAllTextAsync(this.Root.GetGLSPath());
-                    string newGLSDefs = await File.ReadAllTextAsync(this.Root.GetGLSDefsPath());
-
-                    return newAUX != oldAUX || oldGLS != newGLS || oldGLSDefs != newGLSDefs;
+                    StartInfo = this.Root.GetLaTeXStartInfo()
                 },
-                StartInfo = this.Root.GetLaTeXStartInfo()
+                FileContentComparisons = await GetFileContentComparisonsAsync(),
             });
 
             var task = new ProjectTask()
             {
                 OutputPDFPath = this.Root.GetPDFPath(),
                 OutputDirectory = this.Root.Bin,
-                DependencyPaths = this.GetIncludes(),
+                DependencyPaths = this.GetIncludes(fileSystem),
                 BuildTasks = buildTasks
             };
 
             return task;
         }
 
-        private IEnumerable<string> GetIncludes()
+        private IEnumerable<string> GetIncludes(IFileSystem fileSystem)
         {
             var toVisit = new Queue<string>();
+            IDirectory directory = fileSystem.Directory;
 
             foreach (var include in this.Root.GetDependencyPaths())
             {
@@ -108,9 +77,9 @@ namespace LaTeXTools.Build
             {
                 string item = toVisit.Dequeue();
 
-                if (Directory.Exists(item))
+                if (directory.Exists(item))
                 {
-                    foreach (var child in Directory.EnumerateFileSystemEntries(item))
+                    foreach (var child in directory.EnumerateFileSystemEntries(item))
                     {
                         toVisit.Enqueue(child);
                     }
@@ -120,6 +89,22 @@ namespace LaTeXTools.Build
 
                 yield return item;
             }
+        }
+
+        private async ValueTask<IEnumerable<FileContentComparison?>> GetFileContentComparisonsAsync()
+        {
+            var comparison = new List<FileContentComparison>()
+            {
+                await FileContentComparison.OpenAsync(this.Root.GetAUXPath())
+            };
+
+            if (this.Root.Glossary)
+            {
+                comparison.Add(await FileContentComparison.OpenAsync(this.Root.GetGLSPath()));
+                comparison.Add(await FileContentComparison.OpenAsync(this.Root.GetGLSDefsPath()));
+            }
+
+            return comparison.ToArray();
         }
     }
 }
