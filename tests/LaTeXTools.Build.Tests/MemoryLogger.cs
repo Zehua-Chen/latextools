@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using LaTeXTools.Build.Log;
 
-namespace LaTeXTools.Build.Log
+namespace LaTeXTools.Build.Tests
 {
     public class MemoryLogger : ILogger
     {
@@ -12,27 +13,43 @@ namespace LaTeXTools.Build.Log
 
         public void LogError(string error)
         {
-            Errors.Add(error);
+            lock (this)
+            {
+                Errors.Add(error);
+            }
         }
 
         public void LogFile(string file)
         {
-            Files.Add(file);
+            lock (this)
+            {
+                Files.Add(file);
+            }
+
         }
 
         public void Log(string message)
         {
-            Messages.Add(message);
+            lock (this)
+            {
+                Messages.Add(message);
+            }
         }
 
         public void LogProcessStdErr(in ProcessOutput stderr)
         {
-            ProcessStdErrs.Add(stderr);
+            lock (this)
+            {
+                ProcessStdErrs.Add(stderr);
+            }
         }
 
         public void LogProcessStdOut(in ProcessOutput stdout)
         {
-            ProcessStdOuts.Add(stdout);
+            lock (this)
+            {
+                ProcessStdOuts.Add(stdout);
+            }
         }
     }
 }
