@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
+using System.CommandLine;
 using System.CommandLine.Invocation;
 using LaTeXTools.Project;
 
@@ -10,6 +11,17 @@ namespace latextools
 {
     public class OpenHandler : ICommandHandler
     {
+        public static Command Command
+        {
+            get
+            {
+                var command = new Command("open", "Open the pdf file");
+                command.Handler = new OpenHandler();
+
+                return command;
+            }
+        }
+
         public async Task<int> InvokeAsync(InvocationContext context)
         {
             var logger = new Logger();
@@ -56,7 +68,7 @@ namespace latextools
                 return new ProcessStartInfo($"{pdf}");
             }
 
-            throw new NotImplementedException("Not implemented for this exception");
+            throw new NotImplementedException("Not implemented for this platform");
         }
     }
 }

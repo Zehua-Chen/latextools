@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using System.CommandLine;
 using System.CommandLine.Parsing;
 using System.CommandLine.Invocation;
 using LaTeXTools.Project;
@@ -9,6 +10,22 @@ namespace latextools
 {
     public class NewHandler : ICommandHandler
     {
+        public static Command Command
+        {
+            get
+            {
+                var command = new Command("new", "Create a new project")
+                {
+                    new Option<string>(
+                        aliases: new string[] { "-n", "--name" },
+                        description: "name of the project")
+                };
+
+                command.Handler = new NewHandler();
+
+                return command;
+            }
+        }
         public async Task<int> InvokeAsync(InvocationContext context)
         {
             ParseResult result = context.ParseResult;

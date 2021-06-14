@@ -1,3 +1,4 @@
+using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Threading.Tasks;
 using System.IO;
@@ -11,6 +12,17 @@ namespace latextools
 {
     public class ExportHandler : ICommandHandler
     {
+        public static Command Command
+        {
+            get
+            {
+                var command = new Command("export", "Export a Makefile");
+                command.Handler = new ExportHandler();
+
+                return command;
+            }
+        }
+
         public async Task<int> InvokeAsync(InvocationContext context)
         {
             var logger = new Logger();

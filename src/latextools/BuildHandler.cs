@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.IO.Abstractions;
 using System.Threading.Tasks;
+using System.CommandLine;
 using System.CommandLine.Invocation;
 using LaTeXTools.Project;
 using LaTeXTools.Build;
@@ -11,6 +12,17 @@ namespace latextools
 {
     public class BuildHandler : ICommandHandler
     {
+        public static Command Command
+        {
+            get
+            {
+                var command = new Command("build", "Build LaTeX target");
+                command.Handler = new BuildHandler();
+
+                return command;
+            }
+        }
+
         public async Task<int> InvokeAsync(InvocationContext context)
         {
             var logger = new Logger();

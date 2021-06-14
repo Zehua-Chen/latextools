@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using System.IO;
+using System.CommandLine;
 using System.CommandLine.Invocation;
 using LaTeXTools.Project;
 
@@ -8,6 +9,16 @@ namespace latextools
 {
     public class CleanHandler : ICommandHandler
     {
+        public static Command Command
+        {
+            get
+            {
+                var command = new Command("clean", "Clean the build folder");
+                command.Handler = new CleanHandler();
+
+                return command;
+            }
+        }
         public async Task<int> InvokeAsync(InvocationContext context)
         {
             string config = Path.Combine(Environment.CurrentDirectory, "latexproject.json");
