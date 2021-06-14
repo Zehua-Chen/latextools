@@ -5,18 +5,33 @@ using LaTeXTools.Build.Tests;
 
 namespace LaTeXTools.Build.Tasks.Tests
 {
-    public class CreateDirectoryTaskTests
+    public sealed class CreateDirectoryTaskTests
     {
         [Fact]
-        public async ValueTask Test()
+        public async ValueTask DirectoryExists()
         {
             var task = new CreateDirectoryTask("bin");
             var fs = new MockFileSystem();
             var logger = new MemoryLogger();
 
             var context = new BuildContext(fs, logger);
-            await task.RunAsync(context);
 
+            Assert.True(fs.Directory.Exists("bin"));
+            await task.RunAsync(context);
+            Assert.True(fs.Directory.Exists("bin"));
+        }
+
+        [Fact]
+        public async ValueTask DirectoryDoesNotExists()
+        {
+            var task = new CreateDirectoryTask("bin");
+            var fs = new MockFileSystem();
+            var logger = new MemoryLogger();
+
+            var context = new BuildContext(fs, logger);
+
+            Assert.False(fs.Directory.Exists("bin"));
+            await task.RunAsync(context);
             Assert.True(fs.Directory.Exists("bin"));
         }
     }

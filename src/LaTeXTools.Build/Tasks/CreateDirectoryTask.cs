@@ -16,7 +16,7 @@ namespace LaTeXTools.Build.Tasks
         {
             ILogger logger = context.Logger;
 
-            if (!System.IO.Directory.Exists(this.Directory))
+            if (!context.FileSystem.Directory.Exists(this.Directory))
             {
                 logger.Log($"create directory: {this.Directory}");
                 context.FileSystem.Directory.CreateDirectory(this.Directory);

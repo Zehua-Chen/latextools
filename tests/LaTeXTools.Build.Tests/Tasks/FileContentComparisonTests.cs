@@ -3,7 +3,7 @@ using Xunit;
 
 namespace LaTeXTools.Build.Tasks.Tests
 {
-    public class FileContentComparisonTests
+    public sealed class FileContentComparisonTests
     {
         [Theory]
         [MemberData(nameof(EqualData))]
