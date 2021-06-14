@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
-using LaTeXTools.Build.Log;
 
 namespace LaTeXTools.Build.Tasks
 {
-    public class FileContentComparisonsTask : BuildTask
+    public class RunIfFileContentsDifferTask : BuildTask
     {
         /// <summary>
         /// The task ot execute if there is a file content comparison returns false.
@@ -29,7 +28,7 @@ namespace LaTeXTools.Build.Tasks
         /// <value></value>
         public IEnumerable<FileContentComparison?> FileContentComparisons { get; set; }
 
-        public FileContentComparisonsTask() : base()
+        public RunIfFileContentsDifferTask() : base()
         {
             Task = new BuildTask();
             FileContentComparisons = new FileContentComparison[0];
@@ -69,12 +68,12 @@ namespace LaTeXTools.Build.Tasks
 
         public override bool Equals(BuildTask? other)
         {
-            if (other == null || !(other is FileContentComparisonsTask))
+            if (other == null || !(other is RunIfFileContentsDifferTask))
             {
                 return false;
             }
 
-            var otherComparisonTask = (FileContentComparisonsTask)other;
+            var otherComparisonTask = (RunIfFileContentsDifferTask)other;
 
             return base.Equals(other)
                 && this.Task.Equals(otherComparisonTask.Task)

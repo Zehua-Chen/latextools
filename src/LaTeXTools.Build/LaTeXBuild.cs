@@ -43,7 +43,7 @@ namespace LaTeXTools.Build
                 });
             }
 
-            buildTasks.Add(new FileContentComparisonsTask()
+            buildTasks.Add(new RunIfFileContentsDifferTask()
             {
                 Task = new RunProcessTask()
                 {
