@@ -1,7 +1,7 @@
 using System;
 using LaTeXTools.Build.Log;
 
-namespace latextools
+namespace LaTeXTools.CLI
 {
     public class Logger : ILogger
     {

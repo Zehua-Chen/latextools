@@ -1,7 +1,7 @@
 ﻿using System.CommandLine;
 using System.Threading.Tasks;
 
-namespace latextools
+namespace LaTeXTools.CLI
 {
     class Program
     {

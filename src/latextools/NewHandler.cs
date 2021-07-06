@@ -6,8 +6,14 @@ using System.CommandLine.Parsing;
 using System.CommandLine.Invocation;
 using LaTeXTools.Project;
 
-namespace latextools
+namespace LaTeXTools.CLI
 {
+    /// <summary>
+    /// <c>latextools new</c>; create a new LaTeX project
+    ///
+    /// Passing <c>--name</c> parameter will cause this command to create the project in a new
+    /// folder; not passing it will cause this command to create the project in place
+    /// </summary>
     public class NewHandler : ICommandHandler
     {
         public static Command Command

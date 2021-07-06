@@ -8,7 +8,7 @@ using LaTeXTools.Build;
 using LaTeXTools.Build.Tasks;
 using LaTeXTools.Build.Generators;
 
-namespace latextools
+namespace LaTeXTools.CLI
 {
     public class ExportHandler : ICommandHandler
     {

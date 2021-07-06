@@ -8,7 +8,7 @@ using LaTeXTools.Project;
 using LaTeXTools.Build;
 using LaTeXTools.Build.Tasks;
 
-namespace latextools
+namespace LaTeXTools.CLI
 {
     public class BuildHandler : ICommandHandler
     {

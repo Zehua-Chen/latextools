@@ -5,7 +5,7 @@ using System.CommandLine;
 using System.CommandLine.Invocation;
 using LaTeXTools.Project;
 
-namespace latextools
+namespace LaTeXTools.CLI
 {
     public class CleanHandler : ICommandHandler
     {
