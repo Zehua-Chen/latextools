@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.IO;
+using System.IO.Abstractions;
 
 namespace LaTeXTools.Project
 {
@@ -59,15 +60,15 @@ namespace LaTeXTools.Project
         /// </summary>
         /// <param name="path">the path of the file to be written to</param>
         /// <returns></returns>
-        public async ValueTask WriteAsync(string path)
+        public async ValueTask WriteAsync(string path, IFile file)
         {
-            using FileStream file = File.OpenWrite(path);
+            using Stream fileStream = file.OpenWrite(path);
             JsonSerializerOptions options = new JsonSerializerOptions()
             {
                 WriteIndented = true,
             };
 
-            await JsonSerializer.SerializeAsync(file, this, options);
+            await JsonSerializer.SerializeAsync(fileStream, this, options);
         }
 
         /// <summary>

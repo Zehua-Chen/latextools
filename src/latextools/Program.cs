@@ -1,4 +1,5 @@
-﻿using System.CommandLine;
+﻿using System;
+using System.CommandLine;
 using System.Threading.Tasks;
 
 namespace LaTeXTools.CLI
@@ -7,9 +8,14 @@ namespace LaTeXTools.CLI
     {
         static async Task Main(string[] args)
         {
+            Console.WriteLine(string.Join(", ", args));
+
+            var newCommand = NewHandler.Command;
+            newCommand.Handler = new NewHandler();
+
             RootCommand application = new RootCommand("LaTeX Tools")
             {
-                NewHandler.Command,
+                newCommand,
                 BuildHandler.Command,
                 CleanHandler.Command,
                 ExportHandler.Command,

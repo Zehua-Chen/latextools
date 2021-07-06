@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.IO.Abstractions;
 using System.Threading.Tasks;
 using System.CommandLine;
 using System.CommandLine.Parsing;
@@ -27,33 +28,48 @@ namespace LaTeXTools.CLI
                         description: "name of the project")
                 };
 
-                command.Handler = new NewHandler();
-
                 return command;
             }
         }
+
+        private IFileSystem _fileSystem;
+        private string _currentDirectory;
+
+        public NewHandler() : this(new FileSystem(), Environment.CurrentDirectory)
+        {
+        }
+
+        public NewHandler(IFileSystem fileSystem, string currentDirectory)
+        {
+            _fileSystem = fileSystem;
+            _currentDirectory = currentDirectory;
+        }
+
         public async Task<int> InvokeAsync(InvocationContext context)
         {
             ParseResult result = context.ParseResult;
 
             string? name = (string?)result.ValueForOption("--name");
-            string workingDirectory = Environment.CurrentDirectory;
+            string workingDirectory = _currentDirectory;
 
             if (name != null)
             {
                 workingDirectory = Path.Combine(workingDirectory, name);
 
-                if (!Directory.Exists(workingDirectory))
+                if (!_fileSystem.Directory.Exists(workingDirectory))
                 {
-                    Directory.CreateDirectory(workingDirectory);
+                    _fileSystem.Directory.CreateDirectory(workingDirectory);
                 }
 
-                Environment.CurrentDirectory = workingDirectory;
+                // Environment.CurrentDirectory = workingDirectory;
             }
 
             var project = new LaTeXProject();
 
-            await project.WriteAsync(Path.Combine(workingDirectory, "latexproject.json"));
+            await project.WriteAsync(
+                Path.Combine(workingDirectory, "latexproject.json"),
+                _fileSystem.File);
+
             await CreateEntryFileAsync(Path.Combine(workingDirectory, "index.tex"));
 
             return 0;
@@ -61,7 +77,7 @@ namespace LaTeXTools.CLI
 
         private async ValueTask CreateEntryFileAsync(string path)
         {
-            using FileStream stream = File.OpenWrite(path);
+            using Stream stream = _fileSystem.File.OpenWrite(path);
             using var writer = new StreamWriter(stream);
 
             var content = @"\documentclass{article}
