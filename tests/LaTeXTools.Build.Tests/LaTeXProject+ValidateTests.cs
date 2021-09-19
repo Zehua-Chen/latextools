@@ -10,7 +10,22 @@ namespace LaTeXTools.Build.Tests
     public sealed class LaTeXProjectValidateExtensionsTests
     {
         [Fact]
-        public void PathsExist()
+        public void Bib()
+        {
+            var project = new LaTeXProject();
+
+            project.Bib = "foo";
+            Assert.Throws<ArgumentException>(() => project.ThrowIfBibNotSupported());
+
+            project.Bib = "biber";
+            project.ThrowIfBibNotSupported();
+
+            project.Bib = "none";
+            project.ThrowIfBibNotSupported();
+        }
+
+        [Fact]
+        public void Dependencies()
         {
             var fs = new MockFileSystem();
             var project = new LaTeXProject()
@@ -19,19 +34,22 @@ namespace LaTeXTools.Build.Tests
                 Includes = new string[] { "topics/", "other.tex" },
             };
 
+            // index.tex not found
+            Assert.ThrowsAny<Exception>(() => project.ThrowIfDependenciesNotFound(fs));
+
             fs.AddFile("index.tex", new MockFileData(""));
 
             // other.tex not found
-            Assert.ThrowsAny<Exception>(() => project.PathsExist(fs));
+            Assert.ThrowsAny<Exception>(() => project.ThrowIfDependenciesNotFound(fs));
 
             fs.AddFile("other.tex", new MockFileData(""));
 
             // topics/ not found
-            Assert.ThrowsAny<Exception>(() => project.PathsExist(fs));
+            Assert.ThrowsAny<Exception>(() => project.ThrowIfDependenciesNotFound(fs));
 
             fs.AddDirectory("topics");
 
-            project.PathsExist(fs);
+            project.ThrowIfDependenciesNotFound(fs);
         }
     }
 }

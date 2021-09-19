@@ -12,7 +12,7 @@ namespace LaTeXTools.CLI
 
             try
             {
-                build.Root.PathsExist(fileSystem);
+                build.Root.ThrowIfInvalid(fileSystem);
             }
             catch (Exception e)
             {

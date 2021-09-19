@@ -6,8 +6,6 @@ namespace LaTeXTools.Build.Tasks
 {
     public class BuildTask : IEquatable<BuildTask>
     {
-        public string? Name { get; set; }
-
         public virtual ValueTask RunAsync(BuildContext context)
         {
             return new ValueTask();
@@ -20,7 +18,7 @@ namespace LaTeXTools.Build.Tasks
                 return false;
             }
 
-            return other.Name == Name;
+            return true;
         }
     }
 }

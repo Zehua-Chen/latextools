@@ -34,6 +34,17 @@ namespace LaTeXTools.Build.Tests.Generators
                                     FileName = "pdflatex",
                                     Arguments = "-output-directory=bin -halt-on-error index.tex"
                                 }
+                            },
+                            new RunIfFileContentsDifferTask()
+                            {
+                                Task = new RunProcessTask()
+                                {
+                                    StartInfo = new ProcessStartInfo()
+                                    {
+                                        FileName = "pdflatex",
+                                        Arguments = "-output-directory=bin -halt-on-error index.tex"
+                                    }
+                                }
                             }
                         }
                     },
@@ -81,6 +92,7 @@ namespace LaTeXTools.Build.Tests.Generators
                                 },
                                 Commands = new List<string>()
                                 {
+                                    "pdflatex -output-directory=bin -halt-on-error index.tex",
                                     "pdflatex -output-directory=bin -halt-on-error index.tex"
                                 }
                             }

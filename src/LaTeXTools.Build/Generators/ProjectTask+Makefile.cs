@@ -68,27 +68,14 @@ namespace LaTeXTools.Build.Generators
 
         private static MakeTarget GetPDFTarget(ProjectTask projectTask)
         {
-            MakeTarget target = new MakeTarget();
-
-            target.Name = $"{projectTask.OutputPDFPath}";
+            var target = new MakeTarget()
+            {
+                Name = $"{projectTask.OutputPDFPath}",
+            };
 
             if (projectTask.BuildTasks != null)
             {
-                foreach (var build in projectTask.BuildTasks)
-                {
-                    if (build is RunProcessTask)
-                    {
-                        var runProcessTask = (RunProcessTask)build;
-                        ProcessStartInfo? startInfo = runProcessTask.StartInfo;
-
-                        if (startInfo == null)
-                        {
-                            continue;
-                        }
-
-                        target.Commands.Add($"{startInfo.FileName} {startInfo.Arguments}");
-                    }
-                }
+                CreateCommands(target.Commands, projectTask.BuildTasks);
             }
 
             if (projectTask.DependencyPaths != null)
@@ -99,6 +86,38 @@ namespace LaTeXTools.Build.Generators
             target.OrderOnlyDependencies.Add($"{projectTask.OutputDirectory}");
 
             return target;
+        }
+
+        private static List<string> CreateCommands(
+            List<string> commands,
+            IEnumerable<BuildTask> buildTasks)
+        {
+            foreach (BuildTask build in buildTasks)
+            {
+                CreateCommands(commands, build);
+            }
+
+            return commands;
+        }
+
+        private static void CreateCommands(List<string> commands, BuildTask task)
+        {
+            switch (task)
+            {
+                case IEnumerable<BuildTask> taskWithChildren:
+                    CreateCommands(commands, taskWithChildren);
+                    break;
+                case RunProcessTask runProcessTask:
+                    ProcessStartInfo? startInfo = runProcessTask.StartInfo;
+
+                    if (startInfo == null)
+                    {
+                        break;
+                    }
+
+                    commands.Add($"{startInfo.FileName} {startInfo.Arguments}");
+                    break;
+            }
         }
     }
 }

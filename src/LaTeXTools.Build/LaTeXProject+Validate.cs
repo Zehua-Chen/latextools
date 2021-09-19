@@ -8,10 +8,37 @@ namespace LaTeXTools.Build
     public static class LaTeXProjectValidateExtensions
     {
         /// <summary>
-        /// Throw exception if all paths exists
+        /// Throw if the project is invalid
         /// </summary>
         /// <param name="project"></param>
-        public static void PathsExist(this LaTeXProject project, IFileSystem fileSystem)
+        /// <param name="fileSystem"></param>
+        public static void ThrowIfInvalid(this LaTeXProject project, IFileSystem fileSystem)
+        {
+            project.ThrowIfBibNotSupported();
+            project.ThrowIfDependenciesNotFound(fileSystem);
+        }
+
+        /// <summary>
+        /// Throw an exception if a bibliography is not suppported
+        /// </summary>
+        /// <param name="project"></param>
+        public static void ThrowIfBibNotSupported(this LaTeXProject project)
+        {
+            switch (project.Bib)
+            {
+                case "none":
+                case "biber":
+                    break;
+                default:
+                    throw new ArgumentException("\"bib\" can only be none or biber");
+            }
+        }
+
+        /// <summary>
+        /// Throw exception if a dependency does not exists
+        /// </summary>
+        /// <param name="project"></param>
+        public static void ThrowIfDependenciesNotFound(this LaTeXProject project, IFileSystem fileSystem)
         {
             if (!fileSystem.File.Exists(project.Entry))
             {

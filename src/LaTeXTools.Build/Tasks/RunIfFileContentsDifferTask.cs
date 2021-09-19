@@ -1,10 +1,11 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 
 namespace LaTeXTools.Build.Tasks
 {
-    public class RunIfFileContentsDifferTask : BuildTask
+    public class RunIfFileContentsDifferTask : BuildTask, IEnumerable<BuildTask>
     {
         /// <summary>
         /// The task ot execute if there is a file content comparison returns false.
@@ -64,6 +65,16 @@ namespace LaTeXTools.Build.Tasks
                     break;
                 }
             }
+        }
+
+        public IEnumerator<BuildTask> GetEnumerator()
+        {
+            yield return Task;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
 
         public override bool Equals(BuildTask? other)

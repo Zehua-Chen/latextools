@@ -128,15 +128,6 @@ namespace LaTeXTools.Project
 
             project.WorkingDirectory = directory;
 
-            switch (project.Bib)
-            {
-                case "none":
-                case "biber":
-                    break;
-                default:
-                    throw new ArgumentException("\"bib\" can only be none or biber");
-            }
-
             return project;
         }
     }

@@ -37,6 +37,12 @@ namespace LaTeXTools.CLI
             var build = new LaTeXBuild(project);
             var fileSystem = new FileSystem();
 
+            if (!build.CanBuild(fileSystem, out string error))
+            {
+                logger.LogError(error);
+                return -1;
+            }
+
             string makePath = Path.Combine(project.WorkingDirectory, "Makefile");
 
             ProjectTask task = await build.GetBuildTaskAsync(fileSystem);
