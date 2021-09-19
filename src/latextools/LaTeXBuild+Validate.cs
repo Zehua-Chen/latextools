@@ -17,9 +17,10 @@ namespace LaTeXTools.CLI
             catch (Exception e)
             {
                 error = e.Message;
+                return false;
             }
 
-            return false;
+            return true;
         }
     }
 }
