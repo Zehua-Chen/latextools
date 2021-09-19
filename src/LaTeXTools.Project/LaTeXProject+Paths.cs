@@ -61,12 +61,16 @@ namespace LaTeXTools.Project
         }
 
         /// <summary>
-        /// Get a list of the files that are dependencies to building the project. This would
+        /// Get shallow list of the files that are dependencies to building the project. This would
         /// include <c>project.Entry</c>
         /// </summary>
+        /// <remarks>
+        /// This method does not traverse folders. Instead, only paths in the `LaTeXProject`
+        /// instance is given
+        /// </remarks>
         /// <param name="project">the project in question</param>
-        /// <returns>a list of file paths</returns>
-        public static List<string> GetDependencyPaths(this LaTeXProject project)
+        /// <returns>returns <c>project.Entry</c> and <c>project.Includes</c></returns>
+        public static List<string> GetShallowDependencies(this LaTeXProject project)
         {
             var dependencies = new List<string>();
 

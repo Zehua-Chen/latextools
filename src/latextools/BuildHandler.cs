@@ -39,11 +39,16 @@ namespace LaTeXTools.CLI
                 Environment.CurrentDirectory = project.WorkingDirectory;
             }
 
-            var build = new LaTeXBuild(project);
             var fileSystem = new FileSystem();
+            var build = new LaTeXBuild(project);
+
+            if (!build.CanBuild(fileSystem, out string message))
+            {
+                logger.LogError(message);
+                return -1;
+            }
 
             ProjectTask task = await build.GetBuildTaskAsync(fileSystem);
-
             var buildContext = new BuildContext(fileSystem, logger);
 
             try

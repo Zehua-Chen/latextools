@@ -4,6 +4,9 @@ using LaTeXTools.Build.Tasks;
 
 namespace LaTeXTools.Build.Generators
 {
+    /// <summary>
+    /// Generates makefile for a given project task
+    /// </summary>
     public static class ProjectTaskMakeExtensions
     {
         public static Makefile GetMakefile(this ProjectTask projectTask)

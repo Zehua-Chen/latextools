@@ -6,7 +6,7 @@ using System.Linq;
 namespace LaTeXTools.Build.Generators
 {
     /// <summary>
-    /// A target in the make
+    /// A target in a makefile
     /// </summary>
     public sealed class MakeTarget : IEquatable<MakeTarget>
     {

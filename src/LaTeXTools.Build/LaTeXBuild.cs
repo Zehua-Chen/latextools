@@ -17,8 +17,6 @@ namespace LaTeXTools.Build
 
         public async ValueTask<ProjectTask> GetBuildTaskAsync(IFileSystem fileSystem)
         {
-            this.Root.Validate();
-
             var buildTasks = new List<BuildTask>()
             {
                 new RunProcessTask()
@@ -56,19 +54,24 @@ namespace LaTeXTools.Build
             {
                 OutputPDFPath = this.Root.GetPDFPath(),
                 OutputDirectory = this.Root.Bin,
-                DependencyPaths = this.GetIncludes(fileSystem),
+                DependencyPaths = this.GetAllDependencies(fileSystem),
                 BuildTasks = buildTasks
             };
 
             return task;
         }
 
-        private IEnumerable<string> GetIncludes(IFileSystem fileSystem)
+        /// <summary>
+        /// Traverse folders and get all dependencies of a project
+        /// </summary>
+        /// <param name="fileSystem"></param>
+        /// <returns></returns>
+        private IEnumerable<string> GetAllDependencies(IFileSystem fileSystem)
         {
             var toVisit = new Queue<string>();
             IDirectory directory = fileSystem.Directory;
 
-            foreach (var include in this.Root.GetDependencyPaths())
+            foreach (var include in this.Root.GetShallowDependencies())
             {
                 toVisit.Enqueue(include);
             }
