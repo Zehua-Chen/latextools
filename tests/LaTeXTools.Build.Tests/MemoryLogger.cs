@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using LaTeXTools.Build.Log;
 
 namespace LaTeXTools.Build.Tests
@@ -11,45 +13,41 @@ namespace LaTeXTools.Build.Tests
         public List<ProcessOutput> ProcessStdOuts { get; private set; } = new List<ProcessOutput>();
         public List<ProcessOutput> ProcessStdErrs { get; private set; } = new List<ProcessOutput>();
 
-        public void LogError(string error)
+        private SemaphoreSlim _semaphore = new SemaphoreSlim(1);
+
+        public async ValueTask LogError(string error)
         {
-            lock (this)
-            {
-                Errors.Add(error);
-            }
+            await _semaphore.WaitAsync();
+            Errors.Add(error);
+            _semaphore.Release();
         }
 
-        public void LogFile(string file)
+        public async ValueTask LogFile(string file)
         {
-            lock (this)
-            {
-                Files.Add(file);
-            }
-
+            await _semaphore.WaitAsync();
+            Files.Add(file);
+            _semaphore.Release();
         }
 
-        public void Log(string message)
+        public async ValueTask Log(string message)
         {
-            lock (this)
-            {
-                Messages.Add(message);
-            }
+            await _semaphore.WaitAsync();
+            Messages.Add(message);
+            _semaphore.Release();
         }
 
-        public void LogProcessStdErr(in ProcessOutput stderr)
+        public async ValueTask LogProcessStdErr(ProcessOutput stderr)
         {
-            lock (this)
-            {
-                ProcessStdErrs.Add(stderr);
-            }
+            await _semaphore.WaitAsync();
+            ProcessStdErrs.Add(stderr);
+            _semaphore.Release();
         }
 
-        public void LogProcessStdOut(in ProcessOutput stdout)
+        public async ValueTask LogProcessStdOut(ProcessOutput stdout)
         {
-            lock (this)
-            {
-                ProcessStdOuts.Add(stdout);
-            }
+            await _semaphore.WaitAsync();
+            ProcessStdOuts.Add(stdout);
+            _semaphore.Release();
         }
     }
 }

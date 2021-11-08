@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+
 namespace LaTeXTools.Build.Log
 {
     /// <summary>
@@ -11,7 +13,7 @@ namespace LaTeXTools.Build.Log
         /// Must be thread safe
         /// </summary>
         /// <param name="message">the message</param>
-        void Log(string message);
+        ValueTask Log(string message);
 
         /// <summary>
         /// log error
@@ -19,7 +21,7 @@ namespace LaTeXTools.Build.Log
         /// Must be thread safe
         /// </summary>
         /// <param name="error">the error</param>
-        void LogError(string error);
+        ValueTask LogError(string error);
 
         /// <summary>
         /// Log log produced by another process
@@ -27,7 +29,7 @@ namespace LaTeXTools.Build.Log
         /// Must be thread safe
         /// </summary>
         /// <param name="log">the log content</param>
-        void LogFile(string log);
+        ValueTask LogFile(string log);
 
         /// <summary>
         /// Called to output a stdout of a subprocess
@@ -36,12 +38,12 @@ namespace LaTeXTools.Build.Log
         /// </summary>
         /// <param name="invocation">the process's invocation</param>
         /// <param name="stdout">the stdout</param>
-        void LogProcessStdOut(string invocation, string stdout)
+        ValueTask LogProcessStdOut(string invocation, string stdout)
         {
-            this.LogProcessStdOut(new ProcessOutput { Invocation = invocation, Message = stdout });
+            return this.LogProcessStdOut(new ProcessOutput { Invocation = invocation, Message = stdout });
         }
 
-        void LogProcessStdOut(in ProcessOutput output);
+        ValueTask LogProcessStdOut(ProcessOutput output);
 
         /// <summary>
         /// Called to output the stderr of a subprocess
@@ -50,11 +52,11 @@ namespace LaTeXTools.Build.Log
         /// </summary>
         /// <param name="invocation">the subprocess's invocation</param>
         /// <param name="stderr">the stderr</param>
-        void LogProcessStdErr(string invocation, string stderr)
+        ValueTask LogProcessStdErr(string invocation, string stderr)
         {
-            this.LogProcessStdOut(new ProcessOutput { Invocation = invocation, Message = stderr });
+            return this.LogProcessStdOut(new ProcessOutput { Invocation = invocation, Message = stderr });
         }
 
-        void LogProcessStdErr(in ProcessOutput output);
+        ValueTask LogProcessStdErr(ProcessOutput output);
     }
 }

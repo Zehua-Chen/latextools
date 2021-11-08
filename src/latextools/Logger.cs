@@ -1,4 +1,6 @@
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using LaTeXTools.Build.Log;
 
 namespace LaTeXTools.CLI
@@ -26,72 +28,82 @@ namespace LaTeXTools.CLI
             }
         }
 
-        public void Log(string action)
-        {
-            lock (this)
-            {
-                using ConsoleColorGuard guard = ConsoleColorGuard.Current;
+        private SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"==> {action}");
-            }
+        public async ValueTask Log(string action)
+        {
+            await _semaphore.WaitAsync();
+
+            using ConsoleColorGuard guard = ConsoleColorGuard.Current;
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"==> {action}");
+
+            _semaphore.Release();
         }
 
-        public void LogError(string error)
+        public async ValueTask LogError(string error)
         {
-            lock (this)
-            {
-                using ConsoleColorGuard guard = ConsoleColorGuard.Current;
+            await _semaphore.WaitAsync();
 
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"==> {error}");
-            }
+            using ConsoleColorGuard guard = ConsoleColorGuard.Current;
+
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"==> {error}");
+
+            _semaphore.Release();
         }
 
-        public void LogFile(string log)
+        public async ValueTask LogFile(string log)
         {
+            await _semaphore.WaitAsync();
+
             using ConsoleColorGuard guard = ConsoleColorGuard.Current;
 
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine($"{log}");
+
+            _semaphore.Release();
         }
 
-        public void LogProcessStdOut(in ProcessOutput stdout)
+        public async ValueTask LogProcessStdOut(ProcessOutput stdout)
         {
             if (stdout.Message.Length == 0)
             {
                 return;
             }
 
-            lock (this)
-            {
-                // using ConsoleColorGuard guard = ConsoleColorGuard.Current;
-                Console.WriteLine(stdout.Invocation);
-                Console.WriteLine();
+            await _semaphore.WaitAsync();
 
-                Console.WriteLine(stdout.Message);
-                Console.WriteLine();
-            }
+            // using ConsoleColorGuard guard = ConsoleColorGuard.Current;
+            Console.WriteLine(stdout.Invocation);
+            Console.WriteLine();
+
+            Console.WriteLine(stdout.Message);
+            Console.WriteLine();
+
+            _semaphore.Release();
         }
 
-        public void LogProcessStdErr(in ProcessOutput stderr)
+        public async ValueTask LogProcessStdErr(ProcessOutput stderr)
         {
             if (stderr.Message.Length == 0)
             {
                 return;
             }
 
-            lock (this)
-            {
-                using ConsoleColorGuard guard = ConsoleColorGuard.Current;
+            await _semaphore.WaitAsync();
 
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(stderr.Invocation);
-                Console.WriteLine();
+            using ConsoleColorGuard guard = ConsoleColorGuard.Current;
 
-                Console.WriteLine(stderr.Message);
-                Console.WriteLine();
-            }
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(stderr.Invocation);
+            Console.WriteLine();
+
+            Console.WriteLine(stderr.Message);
+            Console.WriteLine();
+
+            _semaphore.Release();
         }
     }
 }

@@ -30,7 +30,7 @@ namespace LaTeXTools.CLI
 
             if (project == null)
             {
-                logger.LogError("no project found");
+                await logger.LogError("no project found");
                 return -1;
             }
 
@@ -44,7 +44,7 @@ namespace LaTeXTools.CLI
 
             if (!build.CanBuild(fileSystem, out string message))
             {
-                logger.LogError(message);
+                await logger.LogError(message);
                 return -1;
             }
 
@@ -53,13 +53,13 @@ namespace LaTeXTools.CLI
 
             try
             {
-                logger.Log($"working directory: {Environment.CurrentDirectory}");
+                await logger.Log($"working directory: {Environment.CurrentDirectory}");
                 await task.RunAsync(buildContext);
             }
             catch (AbortException abortException)
             {
-                logger.LogError($"process exited with code {abortException.ExitCode}");
-                logger.LogFile(File.ReadAllText(project.GetLogPath()));
+                await logger.LogError($"process exited with code {abortException.ExitCode}");
+                await logger.LogFile(File.ReadAllText(project.GetLogPath()));
             }
             catch (Exception e)
             {
