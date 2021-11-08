@@ -33,7 +33,7 @@ namespace LaTeXTools.Build.Tasks
 
             if (!this.ShouldRun(fileSystem))
             {
-                await context.Logger.Log("no build needed");
+                await context.Logger.LogAsync("no build needed");
                 return;
             }
 

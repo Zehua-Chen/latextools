@@ -29,13 +29,13 @@ namespace LaTeXTools.CLI
 
             if (project == null)
             {
-                await logger.LogError("no project found");
+                await logger.LogErrorAsync("no project found");
                 return -1;
             }
 
             if (!File.Exists(project.GetPDFPath()))
             {
-                await logger.LogError($"{project.GetPDFPath()} does not exists");
+                await logger.LogErrorAsync($"{project.GetPDFPath()} does not exists");
                 return -1;
             }
 
@@ -43,7 +43,7 @@ namespace LaTeXTools.CLI
 
             await Task.Run(async () =>
             {
-                await logger.Log($"{startInfo.FileName} {startInfo.Arguments}");
+                await logger.LogAsync($"{startInfo.FileName} {startInfo.Arguments}");
                 var process = System.Diagnostics.Process.Start(startInfo);
 
                 if (process == null)

@@ -15,35 +15,35 @@ namespace LaTeXTools.Build.Tests
 
         private SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
-        public async ValueTask LogError(string error)
+        public async ValueTask LogErrorAsync(string error)
         {
             await _semaphore.WaitAsync();
             Errors.Add(error);
             _semaphore.Release();
         }
 
-        public async ValueTask LogFile(string file)
+        public async ValueTask LogFileAsync(string file)
         {
             await _semaphore.WaitAsync();
             Files.Add(file);
             _semaphore.Release();
         }
 
-        public async ValueTask Log(string message)
+        public async ValueTask LogAsync(string message)
         {
             await _semaphore.WaitAsync();
             Messages.Add(message);
             _semaphore.Release();
         }
 
-        public async ValueTask LogProcessStdErr(ProcessOutput stderr)
+        public async ValueTask LogProcessStdErrAsync(ProcessOutput stderr)
         {
             await _semaphore.WaitAsync();
             ProcessStdErrs.Add(stderr);
             _semaphore.Release();
         }
 
-        public async ValueTask LogProcessStdOut(ProcessOutput stdout)
+        public async ValueTask LogProcessStdOutAsync(ProcessOutput stdout)
         {
             await _semaphore.WaitAsync();
             ProcessStdOuts.Add(stdout);

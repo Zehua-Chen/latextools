@@ -30,7 +30,7 @@ namespace LaTeXTools.CLI
 
         private SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
-        public async ValueTask Log(string action)
+        public async ValueTask LogAsync(string action)
         {
             await _semaphore.WaitAsync();
 
@@ -42,7 +42,7 @@ namespace LaTeXTools.CLI
             _semaphore.Release();
         }
 
-        public async ValueTask LogError(string error)
+        public async ValueTask LogErrorAsync(string error)
         {
             await _semaphore.WaitAsync();
 
@@ -54,7 +54,7 @@ namespace LaTeXTools.CLI
             _semaphore.Release();
         }
 
-        public async ValueTask LogFile(string log)
+        public async ValueTask LogFileAsync(string log)
         {
             await _semaphore.WaitAsync();
 
@@ -66,7 +66,7 @@ namespace LaTeXTools.CLI
             _semaphore.Release();
         }
 
-        public async ValueTask LogProcessStdOut(ProcessOutput stdout)
+        public async ValueTask LogProcessStdOutAsync(ProcessOutput stdout)
         {
             if (stdout.Message.Length == 0)
             {
@@ -85,7 +85,7 @@ namespace LaTeXTools.CLI
             _semaphore.Release();
         }
 
-        public async ValueTask LogProcessStdErr(ProcessOutput stderr)
+        public async ValueTask LogProcessStdErrAsync(ProcessOutput stderr)
         {
             if (stderr.Message.Length == 0)
             {

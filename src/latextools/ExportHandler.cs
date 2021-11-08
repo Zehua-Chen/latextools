@@ -30,7 +30,7 @@ namespace LaTeXTools.CLI
 
             if (project == null)
             {
-                await logger.Log("no project found");
+                await logger.LogAsync("no project found");
                 return -1;
             }
 
@@ -39,7 +39,7 @@ namespace LaTeXTools.CLI
 
             if (!build.CanBuild(fileSystem, out string error))
             {
-                await logger.LogError(error);
+                await logger.LogErrorAsync(error);
                 return -1;
             }
 
