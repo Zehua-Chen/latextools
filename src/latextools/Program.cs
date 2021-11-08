@@ -8,8 +8,6 @@ namespace LaTeXTools.CLI
     {
         static async Task Main(string[] args)
         {
-            Console.WriteLine(string.Join(", ", args));
-
             var newCommand = NewHandler.Command;
             newCommand.Handler = new NewHandler();
 
