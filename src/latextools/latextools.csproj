@@ -8,6 +8,8 @@
 
   <PropertyGroup Condition="$(Configuration) == 'Release'">
     <PublishTrimmed>true</PublishTrimmed>
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>true</SelfContained>
     <TrimMode>Link</TrimMode>
   </PropertyGroup>
 
