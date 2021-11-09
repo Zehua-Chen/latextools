@@ -59,3 +59,4 @@ Tools used with latex
 
 1. Go to `src/latextools`, and run
    - `dotnet publish -c Release -r osx-x64`
+   - `dotnet publish -c Release -r osx-arm64`
