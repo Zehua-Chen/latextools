@@ -9,9 +9,21 @@
   <PropertyGroup Condition="$(Configuration) == 'Release'">
     <PublishTrimmed>true</PublishTrimmed>
     <PublishSingleFile>true</PublishSingleFile>
-    <SelfContained>true</SelfContained>
     <TrimMode>Link</TrimMode>
   </PropertyGroup>
+
+  <Choose>
+    <When Condition="$(RuntimeIdentifier.Contains('windows'))">
+      <PropertyGroup>
+        <PackageFile>$(MSBuildProjectDirectory)\latextools-$(RuntimeIdentifier).zip</PackageFile>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <PackageFile>$(MSBuildProjectDirectory)\latextools-$(RuntimeIdentifier).tar.gz</PackageFile>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
 
   <ItemGroup>
     <ProjectReference Include="..\LaTeXTools.Project\LaTeXTools.Project.csproj" />
@@ -22,17 +34,20 @@
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.21308.1" />
   </ItemGroup>
 
-  <Target Condition="$(Configuration) == 'Release'" Name="Create Packages" AfterTargets="Publish">
-    <PropertyGroup>
-      <ZipFile>$(MSBuildProjectDirectory)\latextools-$(RuntimeIdentifier).zip</ZipFile>
-    </PropertyGroup>
-
-    <Message Text="Removing old $(ZipFile)" Importance="High" />
-    <Delete Files="$(ZipFile)" />
-    <Message Text="Creating new $(ZipFile)" Importance="High" />
+  <Target Condition="$(Configuration) == 'Release'" Name="CreatePackage" AfterTargets="Publish">
+    <Message Text="Removing old $(PackageFile)" Importance="High" />
+    <Delete Files="$(PackageFile)" />
+    <Message Text="Creating new $(PackageFile)" Importance="High" />
 
     <ZipDirectory
+      Condition="$(RuntimeIdentifier.Contains('windows'))"
       SourceDirectory="$(OutputPath)\publish\"
-      DestinationFile="$(ZipFile)" />
+      DestinationFile="$(PackageFile)" />
+
+    <Exec Command="ls $(OutputPath)\publish\"/>
+
+    <Exec
+      Condition="!$(RuntimeIdentifier.Contains('windows'))"
+      Command="tar -cf $(PackageFile) -C $([System.IO.Path]::Combine($(OutputPath), 'publish')) ." />
   </Target>
 </Project>
