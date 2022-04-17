@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.IO.Abstractions;
 using System.Threading.Tasks;
@@ -17,15 +17,17 @@ namespace LaTeXTools.CLI
     /// </summary>
     public class NewHandler : ICommandHandler
     {
+        public static Option<string> NameOption = new(
+            aliases: new string[] { "-n", "--name" },
+            description: "name of the project");
+
         public static Command Command
         {
             get
             {
                 var command = new Command("new", "Create a new project")
                 {
-                    new Option<string>(
-                        aliases: new string[] { "-n", "--name" },
-                        description: "name of the project")
+                    NameOption
                 };
 
                 return command;
@@ -49,7 +51,8 @@ namespace LaTeXTools.CLI
         {
             ParseResult result = context.ParseResult;
 
-            string? name = (string?)result.ValueForOption("--name");
+            
+            string? name = result.GetValueForOption(NameOption);
             string workingDirectory = _currentDirectory;
 
             if (name != null)

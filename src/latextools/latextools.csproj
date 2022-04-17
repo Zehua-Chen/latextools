@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -31,23 +31,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.21308.1" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta3.22114.1" />
+    <PackageReference Include="System.IO.Abstractions" Version="16.1.25" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="System.IO.Abstractions" />
+  </ItemGroup>
   <Target Condition="$(Configuration) == 'Release'" Name="CreatePackage" AfterTargets="Publish">
     <Message Text="Removing old $(PackageFile)" Importance="High" />
     <Delete Files="$(PackageFile)" />
     <Message Text="Creating new $(PackageFile)" Importance="High" />
 
-    <ZipDirectory
-      Condition="$(RuntimeIdentifier.Contains('windows'))"
-      SourceDirectory="$(OutputPath)\publish\"
-      DestinationFile="$(PackageFile)" />
+    <ZipDirectory Condition="$(RuntimeIdentifier.Contains('windows'))" SourceDirectory="$(OutputPath)\publish\" DestinationFile="$(PackageFile)" />
 
-    <Exec Command="ls $(OutputPath)\publish\"/>
+    <Exec Command="ls $(OutputPath)\publish\" />
 
-    <Exec
-      Condition="!$(RuntimeIdentifier.Contains('windows'))"
-      Command="tar -cf $(PackageFile) -C $([System.IO.Path]::Combine($(OutputPath), 'publish')) ." />
+    <Exec Condition="!$(RuntimeIdentifier.Contains('windows'))" Command="tar -cf $(PackageFile) -C $([System.IO.Path]::Combine($(OutputPath), 'publish')) ." />
   </Target>
 </Project>

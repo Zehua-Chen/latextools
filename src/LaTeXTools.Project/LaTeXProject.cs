@@ -7,12 +7,6 @@ using System.IO.Abstractions;
 
 namespace LaTeXTools.Project;
 
-// [JsonSerializable(typeof(LaTeXProject))]
-// internal partial class LaTeXProjectContext : JsonSerializerContext
-// {
-
-// }
-
 /// <summary>
 /// Models a LaTeX project
 /// </summary>
@@ -69,14 +63,16 @@ public sealed class LaTeXProject
     public async ValueTask WriteAsync(string path, IFile file)
     {
         using Stream fileStream = file.OpenWrite(path);
-        JsonSerializerOptions options = new JsonSerializerOptions()
+
+        var options = new JsonSerializerOptions()
         {
             WriteIndented = true,
         };
 
-        // options.AddContext<LaTeXProjectContext>();
-
-        await JsonSerializer.SerializeAsync(fileStream, this, options);
+        var context = new LaTeXJsonContext(options);
+        
+        await JsonSerializer.SerializeAsync(
+            fileStream, this, typeof(LaTeXProject), context);
     }
 
     /// <summary>
@@ -127,10 +123,8 @@ public sealed class LaTeXProject
         using var stream = File.Open(path, FileMode.Open);
         string directory = Path.GetDirectoryName(path)!;
 
-        var options = new JsonSerializerOptions();
-        // options.AddContext<LaTeXProjectContext>();
-
-        var project = await JsonSerializer.DeserializeAsync<LaTeXProject>(stream, options);
+        var project = (LaTeXProject?)await JsonSerializer.DeserializeAsync(
+            stream, typeof(LaTeXProject), LaTeXJsonContext.Default);
 
         if (project == null)
         {
